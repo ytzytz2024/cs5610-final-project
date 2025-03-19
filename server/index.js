@@ -8,11 +8,21 @@ dotenv.config();
 
 // 初始化Express应用
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // 中间件
 app.use(cors());
 app.use(express.json());
+
+// 导入所有路由
+const recipeRoutes = require('./routes/recipeRoutes');
+const userRoutes = require('./routes/userRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+
+// 注册所有路由
+app.use('/api/recipes', recipeRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // 测试路由
 app.get('/api', (req, res) => {
