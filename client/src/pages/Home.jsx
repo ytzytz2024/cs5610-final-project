@@ -133,7 +133,7 @@ export default function Home({ isLoggedIn }) {
       <section className="featured-recipes my-5">
         <h2 className="section-title">Popular Recipes</h2>
         <div className="row">
-        <div className="col-md-4 mb-4">
+          <div className="col-md-4 mb-4">
             <div className="card recipe-card">
               <img
                 src="/placeholder-recipe1.jpg"
@@ -157,7 +157,53 @@ export default function Home({ isLoggedIn }) {
             </div>
           </div>
 
-          
+          <div className="col-md-4 mb-4">
+            <div className="card recipe-card">
+              <img
+                src="/placeholder-recipe2.jpg"
+                className="card-img-top"
+                alt="Recipe"
+              />
+              <div className="card-body">
+                <h5 className="card-title">Mediterranean Salad</h5>
+                <p className="card-text">
+                  Fresh and healthy Mediterranean salad with feta cheese and
+                  olives.
+                </p>
+                <div className="recipe-meta">
+                  <span>15 min</span>
+                  <span>220 calories</span>
+                </div>
+                <Link to="/recipe/2" className="btn btn-outline-success">
+                  View Recipe
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-4 mb-4">
+            <div className="card recipe-card">
+              <img
+                src="/placeholder-recipe3.jpg"
+                className="card-img-top"
+                alt="Recipe"
+              />
+              <div className="card-body">
+                <h5 className="card-title">Berry Smoothie Bowl</h5>
+                <p className="card-text">
+                  Nutritious and delicious breakfast option packed with fresh
+                  berries.
+                </p>
+                <div className="recipe-meta">
+                  <span>10 min</span>
+                  <span>280 calories</span>
+                </div>
+                <Link to="/recipe/3" className="btn btn-outline-success">
+                  View Recipe
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
