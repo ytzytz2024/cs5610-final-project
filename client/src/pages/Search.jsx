@@ -8,6 +8,7 @@ const Search = () => {
   const [recipes, setRecipes] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [sortOrder, setSortOrder] = useState('relevance');
   
   // Get query parameters from URL
   const location = useLocation();
@@ -141,6 +142,27 @@ const Search = () => {
     }
   };
   
+  const handleSortChange = (e) => {
+    const newSortOrder = e.target.value;
+    setSortOrder(newSortOrder);
+    
+    // Sort the recipes array based on selected sorting option
+    let sortedRecipes = [...recipes];
+    
+    if (newSortOrder === 'time-asc') {
+      sortedRecipes.sort((a, b) => a.cookingTime - b.cookingTime);
+    } else if (newSortOrder === 'time-desc') {
+      sortedRecipes.sort((a, b) => b.cookingTime - a.cookingTime);
+    } else if (newSortOrder === 'calories-asc') {
+      sortedRecipes.sort((a, b) => a.calories - b.calories);
+    } else if (newSortOrder === 'calories-desc') {
+      sortedRecipes.sort((a, b) => b.calories - a.calories);
+    }
+    // For 'relevance', we keep the original order from the API
+    
+    setRecipes(sortedRecipes);
+  };
+  
   return (
     <div className="search-page-container">
       <div className="search-section">
@@ -170,6 +192,21 @@ const Search = () => {
             {recipes.length > 0 ? `${recipes.length} Recipe Results` : 'Popular Recipes'}
             {searchQuery && ` for "${searchQuery}"`}
           </h2>
+          
+          <div className="sort-control">
+            <label className="me-2">Sort by:</label>
+            <select 
+              className="form-select form-select-sm" 
+              value={sortOrder}
+              onChange={handleSortChange}
+            >
+              <option value="relevance">Relevance</option>
+              <option value="time-asc">Cooking Time (Low to High)</option>
+              <option value="time-desc">Cooking Time (High to Low)</option>
+              <option value="calories-asc">Calories (Low to High)</option>
+              <option value="calories-desc">Calories (High to Low)</option>
+            </select>
+          </div>
         </div>
         
         {isLoading ? (
