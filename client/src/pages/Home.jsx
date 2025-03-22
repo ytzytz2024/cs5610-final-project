@@ -85,7 +85,7 @@ export default function Home({ isLoggedIn }) {
         </p>
 
         <div className="search-container">
-            <div className="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               type="text"
               className="form-control"
@@ -94,14 +94,30 @@ export default function Home({ isLoggedIn }) {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyPress}
             />
-            <button 
-              className="btn btn-outline-success" 
+            <button
+              className="btn btn-outline-success"
               type="button"
               onClick={handleAddIngredient}
             >
               +
             </button>
+          </div>
+
+          {ingredients.length > 0 && (
+            <div className="ingredients-tags mb-3">
+              {ingredients.map((ingredient, index) => (
+                <span key={index} className="ingredient-tag">
+                  {ingredient}
+                  <button
+                    className="remove-tag"
+                    onClick={() => handleRemoveIngredient(ingredient)}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
             </div>
+          )}
         </div>
       </section>
     </div>
