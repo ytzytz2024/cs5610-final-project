@@ -248,7 +248,20 @@ export default function Home({ isLoggedIn }) {
         </div>
       </section>
 
-      
+      {/* Additional content for logged in users */}
+      {isLoggedIn && (
+        <section className="my-recipes-section my-5">
+          <h2 className="section-title">Your Recent Recipes</h2>
+          <div className="row">
+            <div className="col-12 text-center">
+              <p>You haven't created any recipes yet.</p>
+              <Link to="/build" className="btn btn-success">
+                Create Your First Recipe
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
