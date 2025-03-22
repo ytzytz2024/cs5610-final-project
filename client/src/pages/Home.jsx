@@ -206,6 +206,49 @@ export default function Home({ isLoggedIn }) {
           </div>
         </div>
       </section>
+
+      {/* Restaurant suggestions section */}
+      <section className="restaurants-section my-5">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="section-title mb-0">
+            If you don't want to cook today
+          </h2>
+          <div className="carousel-controls">
+            <button className="btn btn-sm btn-outline-secondary me-2">
+              &lt;
+            </button>
+            <button className="btn btn-sm btn-outline-secondary">&gt;</button>
+          </div>
+        </div>
+
+        <div className="row">
+          {restaurants.map((restaurant) => (
+            <div className="col-md-3 mb-4" key={restaurant.id}>
+              <div className="card restaurant-card">
+                <img
+                  src={restaurant.image}
+                  className="card-img-top"
+                  alt={restaurant.name}
+                  onError={(e) => {
+                    e.target.src =
+                      "https://via.placeholder.com/300x200?text=Restaurant";
+                  }}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{restaurant.name}</h5>
+                  <div className="restaurant-meta">
+                    <span>{restaurant.timeRange}</span>
+                    <span>{restaurant.priceRange}</span>
+                  </div>
+                  <button className="btn btn-success w-100 mt-2">Save</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      
     </div>
   );
 }
