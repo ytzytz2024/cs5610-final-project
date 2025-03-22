@@ -5,6 +5,9 @@ import './Profile.css';
 const Profile = ({ isLoggedIn }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const [createdRecipes, setCreatedRecipes] = useState([]);
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [activeTab, setActiveTab] = useState('created');
   const [loading, setLoading] = useState(true);
   
   // Redirect to login if not authenticated
@@ -32,6 +35,8 @@ const Profile = ({ isLoggedIn }) => {
         };
         
         setUser(mockUser);
+        setCreatedRecipes([]);
+        setSavedRecipes([]);
         setLoading(false);
       }, 1000);
     } catch (err) {
@@ -76,6 +81,50 @@ const Profile = ({ isLoggedIn }) => {
             >
               Edit Profile
             </button>
+          </div>
+          
+          <div className="recipes-section">
+            <div className="recipes-tabs">
+              <button 
+                className={`tab-btn ${activeTab === 'created' ? 'active' : ''}`}
+                onClick={() => setActiveTab('created')}
+              >
+                My Created Recipes
+              </button>
+              <button 
+                className={`tab-btn ${activeTab === 'saved' ? 'active' : ''}`}
+                onClick={() => setActiveTab('saved')}
+              >
+                Saved Recipes
+              </button>
+            </div>
+            
+            <div className="tab-content">
+              {activeTab === 'created' ? (
+                <>
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2 className="section-title">My Created Recipes</h2>
+                    <Link to="/build" className="btn btn-success">
+                      <i className="bi bi-plus"></i> New Recipe
+                    </Link>
+                  </div>
+                  
+                  <div className="empty-state">
+                    <p>You haven't created any recipes yet.</p>
+                    <Link to="/build" className="btn btn-success">Create Your First Recipe</Link>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2 className="section-title">Saved Recipes</h2>
+                  
+                  <div className="empty-state">
+                    <p>You haven't saved any recipes yet.</p>
+                    <Link to="/search" className="btn btn-success">Discover Recipes</Link>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </>
       )}
