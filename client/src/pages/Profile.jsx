@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import RecipeCard from '../components/RecipeCard';
 import './Profile.css';
 
 const Profile = ({ isLoggedIn }) => {
@@ -34,9 +35,44 @@ const Profile = ({ isLoggedIn }) => {
           preferences: ['Vegetarian', 'Low Carb']
         };
         
+        // Mock created recipes
+        const mockCreatedRecipes = [
+          {
+            _id: '1',
+            recipeName: 'Fresh Basil Pasta',
+            description: 'A simple and flavorful pasta dish with fresh tomatoes and basil.',
+            cookingTime: 30,
+            calories: 350,
+            userId: '123',
+            image: 'https://via.placeholder.com/300x200?text=Basil+Pasta'
+          },
+          {
+            _id: '2',
+            recipeName: 'Mediterranean Salad',
+            description: 'A refreshing salad with feta cheese, olives, and vegetables.',
+            cookingTime: 15,
+            calories: 220,
+            userId: '123',
+            image: 'https://via.placeholder.com/300x200?text=Mediterranean+Salad'
+          }
+        ];
+        
+        // Mock saved recipes
+        const mockSavedRecipes = [
+          {
+            _id: '4',
+            recipeName: 'Vegetable Curry',
+            description: 'A flavorful vegetable curry with coconut milk.',
+            cookingTime: 35,
+            calories: 320,
+            userId: '456',
+            image: 'https://via.placeholder.com/300x200?text=Vegetable+Curry'
+          }
+        ];
+        
         setUser(mockUser);
-        setCreatedRecipes([]);
-        setSavedRecipes([]);
+        setCreatedRecipes(mockCreatedRecipes);
+        setSavedRecipes(mockSavedRecipes);
         setLoading(false);
       }, 1000);
     } catch (err) {
@@ -109,19 +145,39 @@ const Profile = ({ isLoggedIn }) => {
                     </Link>
                   </div>
                   
-                  <div className="empty-state">
-                    <p>You haven't created any recipes yet.</p>
-                    <Link to="/build" className="btn btn-success">Create Your First Recipe</Link>
-                  </div>
+                  {createdRecipes.length === 0 ? (
+                    <div className="empty-state">
+                      <p>You haven't created any recipes yet.</p>
+                      <Link to="/build" className="btn btn-success">Create Your First Recipe</Link>
+                    </div>
+                  ) : (
+                    <div className="row">
+                      {createdRecipes.map(recipe => (
+                        <div className="col-md-4 mb-4" key={recipe._id}>
+                          <RecipeCard recipe={recipe} showSaveButton={false} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </>
               ) : (
                 <>
                   <h2 className="section-title">Saved Recipes</h2>
                   
-                  <div className="empty-state">
-                    <p>You haven't saved any recipes yet.</p>
-                    <Link to="/search" className="btn btn-success">Discover Recipes</Link>
-                  </div>
+                  {savedRecipes.length === 0 ? (
+                    <div className="empty-state">
+                      <p>You haven't saved any recipes yet.</p>
+                      <Link to="/search" className="btn btn-success">Discover Recipes</Link>
+                    </div>
+                  ) : (
+                    <div className="row">
+                      {savedRecipes.map(recipe => (
+                        <div className="col-md-4 mb-4" key={recipe._id}>
+                          <RecipeCard recipe={recipe} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </>
               )}
             </div>
