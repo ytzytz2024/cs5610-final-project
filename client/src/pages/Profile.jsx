@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import RecipeCard from '../components/RecipeCard';
 import './Profile.css';
 
@@ -25,6 +26,11 @@ const Profile = ({ isLoggedIn }) => {
     
     try {
       // For iteration 1, we'll use mock data
+      // In future iterations, this would be actual API calls:
+      // const userRes = await axios.get('/api/users/profile');
+      // const createdRes = await axios.get('/api/recipes/user');
+      // const savedRes = await axios.get('/api/users/saved-recipes');
+      
       // Simulate API delay
       setTimeout(() => {
         // Mock user data
