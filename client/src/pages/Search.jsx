@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import RecipeCard from '../components/RecipeCard';
 import './Search.css';
 
@@ -14,6 +15,17 @@ const Search = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ingredientsParam = queryParams.get('ingredients');
+  
+  useEffect(() => {
+    // If there are ingredients in URL, set them as search query and trigger search
+    if (ingredientsParam) {
+      setSearchQuery(ingredientsParam.replace(',', ', '));
+      fetchRecipes(ingredientsParam);
+    } else {
+      // Otherwise, fetch some recent/popular recipes
+      fetchPopularRecipes();
+    }
+  }, [ingredientsParam]);
   
   const fetchRecipes = async (query) => {
     setIsLoading(true);
@@ -118,17 +130,6 @@ const Search = () => {
       setIsLoading(false);
     }, 1000);
   };
-  
-  useEffect(() => {
-    // If there are ingredients in URL, set them as search query and trigger search
-    if (ingredientsParam) {
-      setSearchQuery(ingredientsParam.replace(',', ', '));
-      fetchRecipes(ingredientsParam);
-    } else {
-      // Otherwise, fetch some recent/popular recipes
-      fetchPopularRecipes();
-    }
-  }, [ingredientsParam]);
   
   const handleSearch = (e) => {
     e.preventDefault();
