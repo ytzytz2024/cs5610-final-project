@@ -78,7 +78,32 @@ export default function Home({ isLoggedIn }) {
 
   return (
     <div className="home-container">
-      
+      <section className="kitchen-section">
+        <h1 className="text-center my-4">What's in your kitchen?</h1>
+        <p className="text-center mb-4">
+          Enter ingredients you have and let our AI suggest delicious recipes
+        </p>
+
+        <div className="search-container">
+            <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter ingredients (e.g., chicken, rice, tomatoes)"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyPress}
+            />
+            <button 
+              className="btn btn-outline-success" 
+              type="button"
+              onClick={handleAddIngredient}
+            >
+              +
+            </button>
+            </div>
+        </div>
+      </section>
     </div>
   );
 }
