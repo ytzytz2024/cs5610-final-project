@@ -60,6 +60,15 @@ const Profile = ({ isLoggedIn }) => {
             calories: 220,
             userId: '123',
             image: 'https://via.placeholder.com/300x200?text=Mediterranean+Salad'
+          },
+          {
+            _id: '3',
+            recipeName: 'Berry Smoothie Bowl',
+            description: 'A nutritious breakfast bowl with mixed berries and granola.',
+            cookingTime: 10,
+            calories: 280,
+            userId: '123',
+            image: 'https://via.placeholder.com/300x200?text=Smoothie+Bowl'
           }
         ];
         
@@ -73,6 +82,24 @@ const Profile = ({ isLoggedIn }) => {
             calories: 320,
             userId: '456',
             image: 'https://via.placeholder.com/300x200?text=Vegetable+Curry'
+          },
+          {
+            _id: '5',
+            recipeName: 'Quinoa Bowl',
+            description: 'A healthy quinoa bowl with avocado and chickpeas.',
+            cookingTime: 20,
+            calories: 280,
+            userId: '789',
+            image: 'https://via.placeholder.com/300x200?text=Quinoa+Bowl'
+          },
+          {
+            _id: '6',
+            recipeName: 'Zucchini Noodles',
+            description: 'Low-carb zucchini noodles with tomato sauce.',
+            cookingTime: 25,
+            calories: 180,
+            userId: '101',
+            image: 'https://via.placeholder.com/300x200?text=Zucchini+Noodles'
           }
         ];
         
