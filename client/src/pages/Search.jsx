@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import RecipeCard from '../components/RecipeCard';
 import './Search.css';
 
 const Search = () => {
@@ -164,7 +165,37 @@ const Search = () => {
       </div>
       
       <div className="results-section">
-        {/* Results will be displayed here */}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h2 className="results-title">
+            {recipes.length > 0 ? `${recipes.length} Recipe Results` : 'Popular Recipes'}
+            {searchQuery && ` for "${searchQuery}"`}
+          </h2>
+        </div>
+        
+        {isLoading ? (
+          <div className="text-center my-5">
+            <div className="spinner-border text-success" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            <p className="mt-2">Searching for recipes...</p>
+          </div>
+        ) : error ? (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        ) : recipes.length === 0 ? (
+          <div className="text-center my-5">
+            <p>No recipes found. Try different ingredients or keywords.</p>
+          </div>
+        ) : (
+          <div className="row">
+            {recipes.map(recipe => (
+              <div className="col-md-4 mb-4" key={recipe._id}>
+                <RecipeCard recipe={recipe} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
