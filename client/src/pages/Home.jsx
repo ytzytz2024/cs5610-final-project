@@ -118,6 +118,46 @@ export default function Home({ isLoggedIn }) {
               ))}
             </div>
           )}
+
+          <button
+            className="btn btn-success w-100"
+            onClick={handleFindRecipes}
+            disabled={ingredients.length === 0 || isLoading}
+          >
+            {isLoading ? "Finding Recipes..." : "Find Recipes"}
+          </button>
+        </div>
+      </section>
+
+      {/* Featured Recipes Section for anonymous users */}
+      <section className="featured-recipes my-5">
+        <h2 className="section-title">Popular Recipes</h2>
+        <div className="row">
+        <div className="col-md-4 mb-4">
+            <div className="card recipe-card">
+              <img
+                src="/placeholder-recipe1.jpg"
+                className="card-img-top"
+                alt="Recipe"
+              />
+              <div className="card-body">
+                <h5 className="card-title">Chicken and Rice Casserole</h5>
+                <p className="card-text">
+                  A comforting and simple dish that uses your available
+                  ingredients efficiently.
+                </p>
+                <div className="recipe-meta">
+                  <span>35 min</span>
+                  <span>410 calories</span>
+                </div>
+                <Link to="/recipe/1" className="btn btn-outline-success">
+                  View Recipe
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          
         </div>
       </section>
     </div>
