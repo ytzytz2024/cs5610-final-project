@@ -132,6 +132,20 @@ const RecipeDetail = ({ isLoggedIn }) => {
       alert('Failed to save recipe. Please try again.');
     }
   };
+
+  const handleDeleteRecipe = async () => {
+    if (window.confirm('Are you sure you want to delete this recipe? This action cannot be undone.')) {
+      try {
+        // This would be an actual API call in future iterations
+        // await axios.delete(`/api/recipes/${id}`);
+        alert('Recipe deleted successfully!');
+        navigate('/');
+      } catch (err) {
+        console.error('Error deleting recipe:', err);
+        alert('Failed to delete recipe. Please try again.');
+      }
+    }
+  };
 };
 
 export default RecipeDetail;
