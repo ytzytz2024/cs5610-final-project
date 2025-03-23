@@ -47,7 +47,7 @@ const Login = ({ setIsLoggedIn }) => {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -56,21 +56,37 @@ const Login = ({ setIsLoggedIn }) => {
     
     setLoading(true);
     
-    // Simulate successful login
-    setTimeout(() => {
-      localStorage.setItem('token', 'mock-jwt-token');
-      localStorage.setItem('userId', '123'); // mock user ID
-      
-      setIsLoggedIn(true);
+    try {
+      // Simulate API delay
+      setTimeout(() => {
+        // Mock successful login
+        localStorage.setItem('token', 'mock-jwt-token');
+        localStorage.setItem('userId', '123'); // mock user ID
+        
+        setIsLoggedIn(true);
+        setLoading(false);
+        navigate(from, { replace: true });
+      }, 1000);
+    } catch (err) {
       setLoading(false);
-      navigate(from, { replace: true });
-    }, 1000);
+      
+      // Simulate error handling
+      setErrors({ general: 'Login failed. Please try again.' });
+      
+      console.error('Login error:', err);
+    }
   };
   
   return (
     <div className="auth-container">
       <div className="auth-card">
         <h2 className="auth-title">Log In</h2>
+        
+        {errors.general && (
+          <div className="alert alert-danger" role="alert">
+            {errors.general}
+          </div>
+        )}
         
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
