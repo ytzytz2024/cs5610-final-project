@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
 
 // Components
 import NavBar from './components/NavBar';
@@ -26,7 +27,12 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
+      // For iteration 1, we'll just check if token exists
+      // In future iterations, we would verify the token with the backend
       setIsLoggedIn(true);
+      
+      // Set up axios default headers for authenticated requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
   }, []);
   
