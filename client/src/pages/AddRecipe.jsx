@@ -204,10 +204,31 @@ const AddRecipe = ({ isLoggedIn }) => {
           </ul>
         </div>
       )}
+
+    <form onSubmit={handleSubmit} className="recipe-form">
+    <div className="mb-4">
+          <label htmlFor="recipeName" className="form-label">Recipe Title</label>
+          <input
+            type="text"
+            className={`form-control ${errors.recipeName ? 'is-invalid' : ''}`}
+            id="recipeName"
+            name="recipeName"
+            value={recipeData.recipeName}
+            onChange={handleInputChange}
+            placeholder="e.g. Homemade Spaghetti Bolognese"
+          />
+          {errors.recipeName && <div className="invalid-feedback">{errors.recipeName}</div>}
+        </div>
+    </form>
+
+
+
+
+
+
+      
     </div>
   )
-
-
 };
 
 export default AddRecipe;
