@@ -27,7 +27,40 @@ const AddRecipe = ({ isLoggedIn }) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
   
-
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setRecipeData({
+      ...recipeData,
+      [name]: value
+    });
+  };
+  
+  const handleIngredientChange = (index, value) => {
+    const newIngredients = [...recipeData.ingredients];
+    newIngredients[index] = value;
+    setRecipeData({
+      ...recipeData,
+      ingredients: newIngredients
+    });
+  };
+  
+  const addIngredientField = () => {
+    setRecipeData({
+      ...recipeData,
+      ingredients: [...recipeData.ingredients, '']
+    });
+  };
+  
+  const removeIngredientField = (index) => {
+    if (recipeData.ingredients.length > 1) {
+      const newIngredients = [...recipeData.ingredients];
+      newIngredients.splice(index, 1);
+      setRecipeData({
+        ...recipeData,
+        ingredients: newIngredients
+      });
+    }
+  };
 
 
 
