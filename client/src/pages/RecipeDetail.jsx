@@ -215,7 +215,21 @@ const RecipeDetail = ({ isLoggedIn }) => {
     );
   }
 
-  
+  return (
+    <div className="recipe-detail-container">
+        <h1 className="recipe-title">{recipe.recipeName}</h1>
+
+        <div className="recipe-meta-info">
+        <span className="time-info">
+          <i className="bi bi-clock"></i> {recipe.cookingTime} mins
+        </span>
+        <span className="calorie-info">
+          <i className="bi bi-lightning"></i> {recipe.calories} calories
+        </span>
+      </div>
+    </div>
+  );
+
 };
 
 
