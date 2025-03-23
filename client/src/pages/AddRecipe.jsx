@@ -252,6 +252,41 @@ const AddRecipe = ({ isLoggedIn }) => {
           </div>
         </div>
 
+        <div className="mb-4">
+          <label htmlFor="recipeImage" className="form-label">Recipe Cover</label>
+          <div className="custom-file-upload">
+            {imagePreview ? (
+              <div className="image-preview-container">
+                <img src={imagePreview} alt="Recipe preview" className="image-preview" />
+                <button 
+                  type="button" 
+                  className="btn btn-sm btn-outline-danger remove-image"
+                  onClick={() => {
+                    setImagePreview(null);
+                    setRecipeData({...recipeData, image: null});
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <div className="upload-placeholder">
+                <input
+                  type="file"
+                  id="recipeImage"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="file-input"
+                />
+                <label htmlFor="recipeImage" className="file-label">
+                  <div className="upload-icon">📷</div>
+                  <div>Click or drag to upload image</div>
+                </label>
+              </div>
+            )}
+          </div>
+        </div>
+
 
     </form>
 
