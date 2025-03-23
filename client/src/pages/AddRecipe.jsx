@@ -334,6 +334,40 @@ const AddRecipe = ({ isLoggedIn }) => {
           </button>
         </div>
 
+        <div className="mb-4">
+          <label className="form-label">Cooking Steps</label>
+          {errors.instructions && <div className="text-danger mb-2">{errors.instructions}</div>}
+          
+          {recipeData.instructions.map((step, index) => (
+            <div className="input-group mb-3" key={`step-${index}`}>
+              <span className="input-group-text">{index + 1}</span>
+              <textarea
+                className="form-control"
+                value={step}
+                onChange={(e) => handleInstructionChange(index, e.target.value)}
+                placeholder="Describe this cooking step"
+                rows="2"
+              ></textarea>
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={() => removeInstructionField(index)}
+                disabled={recipeData.instructions.length === 1}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          
+          <button
+            type="button"
+            className="btn btn-outline-success btn-sm"
+            onClick={addInstructionField}
+          >
+            + Add Step
+          </button>
+        </div>
+
 
     </form>
 
