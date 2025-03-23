@@ -141,6 +141,55 @@ const AddRecipe = ({ isLoggedIn }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      window.scrollTo(0, 0);
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      // Prepare data for submission
+      const formData = new FormData();
+      formData.append('recipeName', recipeData.recipeName);
+      formData.append('description', recipeData.description);
+      formData.append('cookingTime', recipeData.cookingTime);
+      formData.append('calories', recipeData.calories);
+      formData.append('ingredients', JSON.stringify(recipeData.ingredients));
+      formData.append('instructions', recipeData.instructions.join('\n'));
+      
+      if (recipeData.image) {
+        formData.append('image', recipeData.image);
+      }
+      
+      // For iteration 1, we'll simulate a successful response
+      // In future iterations, this would be:
+      // const response = await axios.post('/api/recipes', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // });
+      
+      // Simulate API delay
+      setTimeout(() => {
+        setLoading(false);
+        alert('Recipe created successfully!');
+        navigate('/profile'); // Navigate to profile or recipe detail
+      }, 1500);
+    } catch (err) {
+      setLoading(false);
+      console.error('Error creating recipe:', err);
+      alert('Failed to create recipe. Please try again.');
+    }
+  };
+
+  if (!isLoggedIn) {
+    return null; // Return null for initial render before redirect
+  }
+
 
 };
 
