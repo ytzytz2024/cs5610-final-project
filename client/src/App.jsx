@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Components
@@ -20,21 +20,31 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Check if user is logged in on app load
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+  
   return (
     <Router>
       <div className="app-container">
-        <NavBar />
+        <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/recipe/:id" element={<RecipeDetail />} />
-            <Route path="/build" element={<AddRecipe />} />
-            <Route path="/recipe/edit/:id" element={<AddRecipe isEditing={true} />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/recipe/:id" element={<RecipeDetail isLoggedIn={isLoggedIn} />} />
+            <Route path="/build" element={<AddRecipe isLoggedIn={isLoggedIn} />} />
+            <Route path="/recipe/edit/:id" element={<AddRecipe isLoggedIn={isLoggedIn} isEditing={true} />} />
+            <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/profile" element={<Profile isLoggedIn={isLoggedIn} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
