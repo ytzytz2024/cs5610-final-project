@@ -255,6 +255,45 @@ const RecipeDetail = ({ isLoggedIn }) => {
         )}
       </div>
 
+      <div className="recipe-image-container">
+        <img 
+          src={recipe.image || 'https://via.placeholder.com/800x500?text=Recipe+Image'}
+          alt={recipe.recipeName}
+          className="recipe-detail-image"
+        />
+      </div>
+
+      <div className="row mt-4">
+        <div className="col-md-8">
+          <div className="description-section">
+            <h2>Description</h2>
+            <p>{recipe.description}</p>
+          </div>
+          
+          <div className="instructions-section">
+            <h2>Instructions</h2>
+            <ol className="instructions-list">
+              {recipe.instructions.split('\n').map((step, index) => (
+                <li key={index}>{step.replace(/^\d+\.\s*/, '')}</li>
+              ))}
+            </ol>
+          </div>
+        </div>
+        
+        <div className="col-md-4">
+          <div className="ingredients-section">
+            <h2>Ingredients</h2>
+            <ul className="ingredients-list">
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index} className="ingredient-item">
+                  {ingredient}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
 
 
     </div>
