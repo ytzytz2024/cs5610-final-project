@@ -287,6 +287,53 @@ const AddRecipe = ({ isLoggedIn }) => {
           </div>
         </div>
 
+        <div className="mb-4">
+          <label htmlFor="description" className="form-label">Description</label>
+          <textarea
+            className={`form-control ${errors.description ? 'is-invalid' : ''}`}
+            id="description"
+            name="description"
+            value={recipeData.description}
+            onChange={handleInputChange}
+            rows="4"
+            placeholder="Describe your recipe - what makes it special?"
+          ></textarea>
+          {errors.description && <div className="invalid-feedback">{errors.description}</div>}
+        </div>
+
+        <div className="mb-4">
+          <label className="form-label">Ingredients</label>
+          {errors.ingredients && <div className="text-danger mb-2">{errors.ingredients}</div>}
+          
+          {recipeData.ingredients.map((ingredient, index) => (
+            <div className="input-group mb-2" key={`ingredient-${index}`}>
+              <input
+                type="text"
+                className="form-control"
+                value={ingredient}
+                onChange={(e) => handleIngredientChange(index, e.target.value)}
+                placeholder="e.g. 2 cups flour"
+              />
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                onClick={() => removeIngredientField(index)}
+                disabled={recipeData.ingredients.length === 1}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+          
+          <button
+            type="button"
+            className="btn btn-outline-success btn-sm"
+            onClick={addIngredientField}
+          >
+            + Add Ingredient
+          </button>
+        </div>
+
 
     </form>
 
