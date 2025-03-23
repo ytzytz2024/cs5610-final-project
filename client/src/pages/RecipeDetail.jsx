@@ -117,7 +117,21 @@ const RecipeDetail = ({ isLoggedIn }) => {
     fetchRecipeDetails();
   }, [id]);
 
-  
+  const handleSaveRecipe = async () => {
+    if (!isLoggedIn) {
+      navigate('/login', { state: { from: `/recipe/${id}` } });
+      return;
+    }
+    
+    try {
+      // This would be an actual API call in future iterations
+      // await axios.post('/api/users/save-recipe', { recipeId: id });
+      alert('Recipe saved successfully!');
+    } catch (err) {
+      console.error('Error saving recipe:', err);
+      alert('Failed to save recipe. Please try again.');
+    }
+  };
 };
 
 export default RecipeDetail;
