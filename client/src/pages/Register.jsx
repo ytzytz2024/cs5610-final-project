@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Auth.css';
 
 const Register = ({ setIsLoggedIn }) => {
@@ -59,7 +60,7 @@ const Register = ({ setIsLoggedIn }) => {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -68,18 +69,57 @@ const Register = ({ setIsLoggedIn }) => {
     
     setLoading(true);
     
-    // Simulate successful registration
-    setTimeout(() => {
-      setIsLoggedIn(true);
+    try {
+      // For iteration 1, we'll simulate a successful registration
+      // In future iterations, this would be an actual API call:
+      // const response = await axios.post('/api/users/register', {
+      //   username: formData.username,
+      //   email: formData.email,
+      //   password: formData.password
+      // });
+      // localStorage.setItem('token', response.data.token);
+      // localStorage.setItem('userId', response.data.userId);
+      
+      // Simulate API delay
+      setTimeout(() => {
+        // Mock successful registration
+        localStorage.setItem('token', 'mock-jwt-token');
+        localStorage.setItem('userId', '123'); // mock user ID
+        
+        setIsLoggedIn(true);
+        setLoading(false);
+        navigate('/');
+      }, 1000);
+    } catch (err) {
       setLoading(false);
-      navigate('/');
-    }, 1000);
+      
+      if (err.response && err.response.data.message) {
+        // Handle specific errors from the backend
+        if (err.response.data.message.includes('email')) {
+          setErrors({ email: 'This email is already registered' });
+        } else if (err.response.data.message.includes('username')) {
+          setErrors({ username: 'This username is already taken' });
+        } else {
+          setErrors({ general: err.response.data.message });
+        }
+      } else {
+        setErrors({ general: 'Registration failed. Please try again.' });
+      }
+      
+      console.error('Registration error:', err);
+    }
   };
   
   return (
     <div className="auth-container">
       <div className="auth-card">
         <h2 className="auth-title">Create an Account</h2>
+        
+        {errors.general && (
+          <div className="alert alert-danger" role="alert">
+            {errors.general}
+          </div>
+        )}
         
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
