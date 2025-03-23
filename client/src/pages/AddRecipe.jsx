@@ -190,6 +190,23 @@ const AddRecipe = ({ isLoggedIn }) => {
     return null; // Return null for initial render before redirect
   }
 
+  return (
+    <div className="add-recipe-container">
+        <h1 className="page-title">Create Your Recipe</h1>
+
+        {Object.keys(errors).length > 0 && (
+        <div className="alert alert-danger">
+          <h5>Please fix the following errors:</h5>
+          <ul className="mb-0">
+            {Object.entries(errors).map(([field, error]) => (
+              <li key={field}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+
 
 };
 
