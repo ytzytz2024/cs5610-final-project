@@ -171,4 +171,23 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/reviews/user/:userId
+// @desc    Get all reviews by a user
+// @access  Public
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const reviews = await Review.find({ userId: req.params.userId })
+      .sort({ timestamp: -1 })
+      .populate({
+        path: 'recipeId',
+        select: 'recipeName'
+      });
+    
+    res.json(reviews);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
