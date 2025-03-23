@@ -1,0 +1,27 @@
+.add-recipe-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .page-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-weight: 700;
+  }
+  
+  .recipe-form {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .custom-file-upload {
+    margin-bottom: 15px;
+  }
+  
+  .file-input {
+    display: none;
+  }
