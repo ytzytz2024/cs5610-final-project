@@ -206,7 +206,7 @@ const AddRecipe = ({ isLoggedIn }) => {
       )}
 
     <form onSubmit={handleSubmit} className="recipe-form">
-    <div className="mb-4">
+        <div className="mb-4">
           <label htmlFor="recipeName" className="form-label">Recipe Title</label>
           <input
             type="text"
@@ -219,6 +219,40 @@ const AddRecipe = ({ isLoggedIn }) => {
           />
           {errors.recipeName && <div className="invalid-feedback">{errors.recipeName}</div>}
         </div>
+
+        <div className="row mb-4">
+          <div className="col-md-6">
+            <label htmlFor="cookingTime" className="form-label">Cooking Time (minutes)</label>
+            <input
+              type="number"
+              className={`form-control ${errors.cookingTime ? 'is-invalid' : ''}`}
+              id="cookingTime"
+              name="cookingTime"
+              value={recipeData.cookingTime}
+              onChange={handleInputChange}
+              placeholder="e.g. 45"
+              min="1"
+            />
+            {errors.cookingTime && <div className="invalid-feedback">{errors.cookingTime}</div>}
+          </div>
+          
+          <div className="col-md-6">
+            <label htmlFor="calories" className="form-label">Calories (optional)</label>
+            <input
+              type="number"
+              className={`form-control ${errors.calories ? 'is-invalid' : ''}`}
+              id="calories"
+              name="calories"
+              value={recipeData.calories}
+              onChange={handleInputChange}
+              placeholder="e.g. 450"
+              min="1"
+            />
+            {errors.calories && <div className="invalid-feedback">{errors.calories}</div>}
+          </div>
+        </div>
+
+
     </form>
 
 
