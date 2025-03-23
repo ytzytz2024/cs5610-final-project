@@ -236,19 +236,22 @@ const RecipeDetail = ({ isLoggedIn }) => {
         <button className="btn btn-light" onClick={() => window.print()}>
           <i className="bi bi-printer"></i> Print
         </button>
-        
+
         {!isCreator && (
           <button className="btn btn-success ms-2" onClick={handleSaveRecipe}>
             <i className="bi bi-bookmark"></i> Save
           </button>
         )}
-        
+
         {isCreator && (
           <>
             <Link to={`/recipe/edit/${id}`} className="btn btn-primary ms-2">
               <i className="bi bi-pencil"></i> Edit
             </Link>
-            <button className="btn btn-danger ms-2" onClick={handleDeleteRecipe}>
+            <button
+              className="btn btn-danger ms-2"
+              onClick={handleDeleteRecipe}
+            >
               <i className="bi bi-trash"></i> Delete
             </button>
           </>
@@ -256,8 +259,11 @@ const RecipeDetail = ({ isLoggedIn }) => {
       </div>
 
       <div className="recipe-image-container">
-        <img 
-          src={recipe.image || 'https://via.placeholder.com/800x500?text=Recipe+Image'}
+        <img
+          src={
+            recipe.image ||
+            "https://via.placeholder.com/800x500?text=Recipe+Image"
+          }
           alt={recipe.recipeName}
           className="recipe-detail-image"
         />
@@ -269,17 +275,17 @@ const RecipeDetail = ({ isLoggedIn }) => {
             <h2>Description</h2>
             <p>{recipe.description}</p>
           </div>
-          
+
           <div className="instructions-section">
             <h2>Instructions</h2>
             <ol className="instructions-list">
-              {recipe.instructions.split('\n').map((step, index) => (
-                <li key={index}>{step.replace(/^\d+\.\s*/, '')}</li>
+              {recipe.instructions.split("\n").map((step, index) => (
+                <li key={index}>{step.replace(/^\d+\.\s*/, "")}</li>
               ))}
             </ol>
           </div>
         </div>
-        
+
         <div className="col-md-4">
           <div className="ingredients-section">
             <h2>Ingredients</h2>
@@ -296,7 +302,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
 
       <div className="reviews-section mt-5">
         <h2>Reviews</h2>
-        
+
         {isLoggedIn ? (
           <form onSubmit={handleSubmitReview} className="review-form">
             <div className="mb-3">
@@ -309,36 +315,43 @@ const RecipeDetail = ({ isLoggedIn }) => {
                 required
               ></textarea>
             </div>
-            <button type="submit" className="btn btn-success">Post Review</button>
+            <button type="submit" className="btn btn-success">
+              Post Review
+            </button>
           </form>
         ) : (
           <div className="alert alert-info">
-            <Link to="/login" className="alert-link">Log in</Link> to share your review
+            <Link to="/login" className="alert-link">
+              Log in
+            </Link>{" "}
+            to share your review
           </div>
         )}
-        
+
         <div className="reviews-list mt-4">
           {reviews.length === 0 ? (
-            <p className="text-muted">No reviews yet. Be the first to review this recipe!</p>
+            <p className="text-muted">
+              No reviews yet. Be the first to review this recipe!
+            </p>
           ) : (
-            reviews.map(review => (
+            reviews.map((review) => (
               <div className="review-item" key={review._id}>
                 <div className="review-header">
                   <div className="reviewer-info">
                     <span className="user-icon">👤</span>
-                    <span className="reviewer-name">{review.user.username}</span>
+                    <span className="reviewer-name">
+                      {review.user.username}
+                    </span>
                   </div>
                   <div className="review-date">
-                    {new Date(review.timestamp).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
+                    {new Date(review.timestamp).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
                     })}
                   </div>
                 </div>
-                <div className="review-content">
-                  {review.comment}
-                </div>
+                <div className="review-content">{review.comment}</div>
               </div>
             ))
           )}
