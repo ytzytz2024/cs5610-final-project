@@ -171,4 +171,22 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/recipes/user/:userId
+// @desc    Get recipes by user ID
+// @access  Public
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const recipes = await Recipe.find({ userId: req.params.userId }).sort({ createdAt: -1 });
+    res.json(recipes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+
+
+
+
 module.exports = router;
