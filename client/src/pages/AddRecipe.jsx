@@ -12,6 +12,27 @@ const AddRecipe = ({ isLoggedIn }) => {
       navigate("/login", { state: { from: "/build" } });
     }
   }, [isLoggedIn, navigate]);
+
+  const [recipeData, setRecipeData] = useState({
+    recipeName: '',
+    description: '',
+    cookingTime: '',
+    calories: '',
+    ingredients: [''],
+    instructions: [''],
+    image: null
+  });
+  
+  const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [errors, setErrors] = useState({});
+  
+
+
+
+
+
+
 };
 
 export default AddRecipe;
