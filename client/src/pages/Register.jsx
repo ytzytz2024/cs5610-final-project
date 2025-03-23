@@ -10,15 +10,59 @@ const Register = () => {
     confirmPassword: ''
   });
   
+  const [errors, setErrors] = useState({});
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    
+    // Clear error when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: null
+      });
+    }
+  };
+  
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Email address is invalid';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
   
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
     console.log('Form submitted:', formData);
   };
   
@@ -32,52 +76,56 @@ const Register = () => {
             <label htmlFor="username" className="form-label">Username</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${errors.username ? 'is-invalid' : ''}`}
               id="username"
               name="username"
               value={formData.username}
               onChange={handleChange}
               placeholder="Choose a username"
             />
+            {errors.username && <div className="invalid-feedback">{errors.username}</div>}
           </div>
           
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email</label>
             <input
               type="email"
-              className="form-control"
+              className={`form-control ${errors.email ? 'is-invalid' : ''}`}
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email"
             />
+            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
           </div>
           
           <div className="mb-3">
             <label htmlFor="password" className="form-label">Password</label>
             <input
               type="password"
-              className="form-control"
+              className={`form-control ${errors.password ? 'is-invalid' : ''}`}
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Create a password"
             />
+            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
           </div>
           
           <div className="mb-3">
             <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
             <input
               type="password"
-              className="form-control"
+              className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
               placeholder="Confirm your password"
             />
+            {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
           </div>
           
           <div className="d-grid mt-4">
