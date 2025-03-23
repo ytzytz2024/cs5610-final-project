@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 
-const Register = () => {
+const Register = ({ setIsLoggedIn }) => {
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -11,6 +13,7 @@ const Register = () => {
   });
   
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   
   const handleChange = (e) => {
     setFormData({
@@ -63,7 +66,14 @@ const Register = () => {
       return;
     }
     
-    console.log('Form submitted:', formData);
+    setLoading(true);
+    
+    // Simulate successful registration
+    setTimeout(() => {
+      setIsLoggedIn(true);
+      setLoading(false);
+      navigate('/');
+    }, 1000);
   };
   
   return (
@@ -129,8 +139,19 @@ const Register = () => {
           </div>
           
           <div className="d-grid mt-4">
-            <button type="submit" className="btn btn-success btn-lg">
-              Register
+            <button 
+              type="submit" 
+              className="btn btn-success btn-lg"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Creating Account...
+                </>
+              ) : (
+                'Register'
+              )}
             </button>
           </div>
           
