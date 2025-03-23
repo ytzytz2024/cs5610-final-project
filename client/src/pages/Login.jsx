@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Auth.css';
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || '/';
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   
   const handleChange = (e) => {
     setFormData({
@@ -49,7 +54,17 @@ const Login = () => {
       return;
     }
     
-    console.log('Login form submitted:', formData);
+    setLoading(true);
+    
+    // Simulate successful login
+    setTimeout(() => {
+      localStorage.setItem('token', 'mock-jwt-token');
+      localStorage.setItem('userId', '123'); // mock user ID
+      
+      setIsLoggedIn(true);
+      setLoading(false);
+      navigate(from, { replace: true });
+    }, 1000);
   };
   
   return (
@@ -87,8 +102,19 @@ const Login = () => {
           </div>
           
           <div className="d-grid mt-4">
-            <button type="submit" className="btn btn-success btn-lg">
-              Log In
+            <button 
+              type="submit" 
+              className="btn btn-success btn-lg"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Logging in...
+                </>
+              ) : (
+                'Log In'
+              )}
             </button>
           </div>
           
