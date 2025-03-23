@@ -62,6 +62,49 @@ const AddRecipe = ({ isLoggedIn }) => {
     }
   };
 
+  const handleInstructionChange = (index, value) => {
+    const newInstructions = [...recipeData.instructions];
+    newInstructions[index] = value;
+    setRecipeData({
+      ...recipeData,
+      instructions: newInstructions
+    });
+  };
+  
+  const addInstructionField = () => {
+    setRecipeData({
+      ...recipeData,
+      instructions: [...recipeData.instructions, '']
+    });
+  };
+  
+  const removeInstructionField = (index) => {
+    if (recipeData.instructions.length > 1) {
+      const newInstructions = [...recipeData.instructions];
+      newInstructions.splice(index, 1);
+      setRecipeData({
+        ...recipeData,
+        instructions: newInstructions
+      });
+    }
+  };
+  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setRecipeData({
+        ...recipeData,
+        image: file
+      });
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
 
 
