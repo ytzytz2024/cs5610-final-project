@@ -106,7 +106,40 @@ const AddRecipe = ({ isLoggedIn }) => {
     }
   };
 
-
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!recipeData.recipeName.trim()) {
+      newErrors.recipeName = 'Recipe name is required';
+    }
+    
+    if (!recipeData.description.trim()) {
+      newErrors.description = 'Description is required';
+    }
+    
+    if (!recipeData.cookingTime) {
+      newErrors.cookingTime = 'Cooking time is required';
+    } else if (isNaN(recipeData.cookingTime) || recipeData.cookingTime <= 0) {
+      newErrors.cookingTime = 'Cooking time must be a positive number';
+    }
+    
+    if (recipeData.calories && (isNaN(recipeData.calories) || recipeData.calories <= 0)) {
+      newErrors.calories = 'Calories must be a positive number';
+    }
+    
+    const emptyIngredients = recipeData.ingredients.some(ing => !ing.trim());
+    if (emptyIngredients) {
+      newErrors.ingredients = 'All ingredient fields must be filled';
+    }
+    
+    const emptyInstructions = recipeData.instructions.some(inst => !inst.trim());
+    if (emptyInstructions) {
+      newErrors.instructions = 'All instruction steps must be filled';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
 
 };
