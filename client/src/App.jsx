@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Components
+import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import RecipeDetail from './pages/RecipeDetail';
@@ -13,6 +14,7 @@ import NotFound from './pages/NotFound';
 
 // Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 // App-wide styles
 import './App.css';
@@ -21,6 +23,8 @@ function App() {
   return (
     <Router>
       <div className="app-container">
+        <NavBar />
+        
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Home />} />
