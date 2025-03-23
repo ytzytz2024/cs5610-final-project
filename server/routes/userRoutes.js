@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require('../models/User');
+const Recipe = require('../models/Recipe');
 const auth = require('../middleware/auth');
 
 // @route   POST /api/users/register
@@ -154,6 +155,43 @@ router.put('/profile', auth, async (req, res) => {
     res.json(user);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST /api/users/save-recipe
+// @desc    Save a recipe to user's saved recipes
+// @access  Private
+router.post('/save-recipe', auth, async (req, res) => {
+  try {
+    const { recipeId } = req.body;
+    
+    // Verify recipe exists
+    const recipe = await Recipe.findById(recipeId);
+    
+    if (!recipe) {
+      return res.status(404).json({ msg: 'Recipe not found' });
+    }
+    
+    // Check if recipe is already saved
+    const user = await User.findById(req.user.id);
+    
+    if (user.savedRecipes.includes(recipeId)) {
+      return res.status(400).json({ msg: 'Recipe already saved' });
+    }
+    
+    // Add recipe to saved recipes
+    user.savedRecipes.push(recipeId);
+    await user.save();
+    
+    res.json(user.savedRecipes);
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Recipe not found' });
+    }
+    
     res.status(500).send('Server Error');
   }
 });
