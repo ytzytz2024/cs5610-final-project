@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Recipe = require('../models/Recipe');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -30,5 +31,19 @@ const upload = multer({
   },
   fileFilter: fileFilter
 });
+
+// @route   GET /api/recipes
+// @desc    Get all recipes
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const recipes = await Recipe.find().sort({ createdAt: -1 });
+    res.json(recipes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 
 module.exports = router;
