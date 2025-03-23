@@ -119,72 +119,76 @@ const RecipeDetail = ({ isLoggedIn }) => {
 
   const handleSaveRecipe = async () => {
     if (!isLoggedIn) {
-      navigate('/login', { state: { from: `/recipe/${id}` } });
+      navigate("/login", { state: { from: `/recipe/${id}` } });
       return;
     }
-    
+
     try {
       // This would be an actual API call in future iterations
       // await axios.post('/api/users/save-recipe', { recipeId: id });
-      alert('Recipe saved successfully!');
+      alert("Recipe saved successfully!");
     } catch (err) {
-      console.error('Error saving recipe:', err);
-      alert('Failed to save recipe. Please try again.');
+      console.error("Error saving recipe:", err);
+      alert("Failed to save recipe. Please try again.");
     }
   };
 
   const handleDeleteRecipe = async () => {
-    if (window.confirm('Are you sure you want to delete this recipe? This action cannot be undone.')) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this recipe? This action cannot be undone."
+      )
+    ) {
       try {
         // This would be an actual API call in future iterations
         // await axios.delete(`/api/recipes/${id}`);
-        alert('Recipe deleted successfully!');
-        navigate('/');
+        alert("Recipe deleted successfully!");
+        navigate("/");
       } catch (err) {
-        console.error('Error deleting recipe:', err);
-        alert('Failed to delete recipe. Please try again.');
+        console.error("Error deleting recipe:", err);
+        alert("Failed to delete recipe. Please try again.");
       }
     }
   };
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
-    
+
     if (!isLoggedIn) {
-      navigate('/login', { state: { from: `/recipe/${id}` } });
+      navigate("/login", { state: { from: `/recipe/${id}` } });
       return;
     }
-    
+
     if (!reviewText.trim()) {
       return;
     }
-    
+
     try {
       // This would be an actual API call in future iterations
       // const response = await axios.post('/api/reviews', {
       //   recipeId: id,
       //   comment: reviewText
       // });
-      
+
       // For now, we'll just add the review to the state with mock data
       const newReview = {
         _id: Date.now().toString(),
-        userId: localStorage.getItem('userId') || '999',
+        userId: localStorage.getItem("userId") || "999",
         recipeId: id,
         comment: reviewText,
         timestamp: new Date().toISOString(),
         user: {
-          username: 'You' // In a real app, this would be the logged-in user's name
-        }
+          username: "You", // In a real app, this would be the logged-in user's name
+        },
       };
-      
+
       setReviews([newReview, ...reviews]);
-      setReviewText('');
-      
-      alert('Review added successfully!');
+      setReviewText("");
+
+      alert("Review added successfully!");
     } catch (err) {
-      console.error('Error posting review:', err);
-      alert('Failed to post review. Please try again.');
+      console.error("Error posting review:", err);
+      alert("Failed to post review. Please try again.");
     }
   };
 
@@ -217,9 +221,9 @@ const RecipeDetail = ({ isLoggedIn }) => {
 
   return (
     <div className="recipe-detail-container">
-        <h1 className="recipe-title">{recipe.recipeName}</h1>
+      <h1 className="recipe-title">{recipe.recipeName}</h1>
 
-        <div className="recipe-meta-info">
+      <div className="recipe-meta-info">
         <span className="time-info">
           <i className="bi bi-clock"></i> {recipe.cookingTime} mins
         </span>
@@ -227,11 +231,34 @@ const RecipeDetail = ({ isLoggedIn }) => {
           <i className="bi bi-lightning"></i> {recipe.calories} calories
         </span>
       </div>
+
+      <div className="action-buttons">
+        <button className="btn btn-light" onClick={() => window.print()}>
+          <i className="bi bi-printer"></i> Print
+        </button>
+        
+        {!isCreator && (
+          <button className="btn btn-success ms-2" onClick={handleSaveRecipe}>
+            <i className="bi bi-bookmark"></i> Save
+          </button>
+        )}
+        
+        {isCreator && (
+          <>
+            <Link to={`/recipe/edit/${id}`} className="btn btn-primary ms-2">
+              <i className="bi bi-pencil"></i> Edit
+            </Link>
+            <button className="btn btn-danger ms-2" onClick={handleDeleteRecipe}>
+              <i className="bi bi-trash"></i> Delete
+            </button>
+          </>
+        )}
+      </div>
+
+
+
     </div>
   );
-
 };
-
-
 
 export default RecipeDetail;
