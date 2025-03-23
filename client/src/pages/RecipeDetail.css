@@ -1,199 +1,202 @@
 .recipe-detail-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.recipe-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.recipe-meta-info {
+  display: flex;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.time-info,
+.calorie-info {
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.bi {
+  margin-right: 5px;
+}
+
+.action-buttons {
+  margin-bottom: 20px;
+}
+
+.recipe-image-container {
+  margin-bottom: 30px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-detail-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+h2:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 3px;
+  background-color: #4caf50;
+}
+
+.description-section {
+  margin-bottom: 30px;
+}
+
+.description-section p {
+  line-height: 1.6;
+  color: #444;
+}
+
+.instructions-list {
+  padding-left: 20px;
+}
+
+.instructions-list li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.ingredients-section {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.ingredients-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.ingredient-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: #444;
+}
+
+.ingredient-item:last-child {
+  border-bottom: none;
+}
+
+.reviews-section {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.review-form textarea {
+  border: 1px solid #ddd;
+  resize: vertical;
+}
+
+.review-form textarea:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+}
+
+.reviews-list {
+  margin-top: 30px;
+}
+
+.review-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.reviewer-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-icon {
+  margin-right: 8px;
+  font-size: 1.2rem;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.review-date {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.review-content {
+  line-height: 1.6;
+  color: #444;
+}
+
+@media print {
+  .action-buttons,
+  .reviews-section,
+  nav,
+  footer {
+    display: none;
   }
-  
+
+  .recipe-detail-container {
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
   .recipe-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #333;
+    font-size: 1.8rem;
   }
-  
+
   .recipe-meta-info {
-    display: flex;
-    margin-bottom: 20px;
-    color: #666;
+    flex-direction: column;
   }
-  
-  .time-info, .calorie-info {
-    margin-right: 20px;
-    display: flex;
-    align-items: center;
+
+  .time-info,
+  .calorie-info {
+    margin-bottom: 5px;
   }
-  
-  .bi {
-    margin-right: 5px;
-  }
-  
+
   .action-buttons {
-    margin-bottom: 20px;
-  }
-  
-  .recipe-image-container {
-    margin-bottom: 30px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .recipe-detail-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-  
-  h2 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 15px;
-    position: relative;
-    padding-bottom: 8px;
-  }
-  
-  h2:after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 3px;
-    background-color: #4CAF50;
-  }
-  .description-section {
-    margin-bottom: 30px;
-  }
-  
-  .description-section p {
-    line-height: 1.6;
-    color: #444;
-  }
-  
-  .instructions-list {
-    padding-left: 20px;
-  }
-  
-  .instructions-list li {
-    margin-bottom: 12px;
-    line-height: 1.5;
-    color: #444;
-  }
-  
-  .ingredients-section {
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    padding: 20px;
-  }
-  
-  .ingredients-list {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .ingredient-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-    color: #444;
-  }
-  
-  .ingredient-item:last-child {
-    border-bottom: none;
-  }
-  
-  .reviews-section {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-  }
-  
-  .review-form textarea {
-    border: 1px solid #ddd;
-    resize: vertical;
-  }
-  
-  .review-form textarea:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
-  }
-  
-  .reviews-list {
-    margin-top: 30px;
-  }
-  
-  .review-item {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .review-header {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
-  
-  .reviewer-info {
-    display: flex;
-    align-items: center;
+
+  .action-buttons .btn {
+    flex: 1;
+    min-width: 120px;
+    margin-left: 0 !important;
   }
-  
-  .user-icon {
-    margin-right: 8px;
-    font-size: 1.2rem;
-  }
-  
-  .reviewer-name {
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .review-date {
-    color: #999;
-    font-size: 0.9rem;
-  }
-  
-  .review-content {
-    line-height: 1.6;
-    color: #444;
-  }
-  
-  @media print {
-    .action-buttons, 
-    .reviews-section,
-    nav,
-    footer {
-      display: none;
-    }
-    
-    .recipe-detail-container {
-      padding: 0;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .recipe-title {
-      font-size: 1.8rem;
-    }
-    
-    .recipe-meta-info {
-      flex-direction: column;
-    }
-    
-    .time-info, .calorie-info {
-      margin-bottom: 5px;
-    }
-    
-    .action-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    
-    .action-buttons .btn {
-      flex: 1;
-      min-width: 120px;
-      margin-left: 0 !important;
-    }
-  }
+}
