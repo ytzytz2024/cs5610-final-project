@@ -1,43 +1,64 @@
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useState } from 'react';
+import axios from 'axios';
+
+// Components
+import NavBar from './components/NavBar';
+import Home from './pages/Home';
+import Search from './pages/Search';
+import RecipeDetail from './pages/RecipeDetail';
+import AddRecipe from './pages/AddRecipe';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
+import NotFound from './pages/NotFound';
+
+// Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
+// App-wide styles
 import './App.css';
 
-// 页面组件会在后期添加
-// import Home from './pages/Home';
-// import Search from './pages/Search';
-// import RecipeDetails from './pages/RecipeDetails';
-// import Profile from './pages/Profile';
-// import Login from './pages/Login';
-// import Register from './pages/Register';
-
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  // Check if user is logged in on app load
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // For iteration 1, we'll just check if token exists
+      // In future iterations, we would verify the token with the backend
+      setIsLoggedIn(true);
+      
+      // Set up axios default headers for authenticated requests
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }, []);
+  
   return (
     <Router>
       <div className="app-container">
-        <header>
-          <h1>SmartRecipe</h1>
-          <nav>
-            <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/search">Search</a></li>
-              <li><a href="/login">Login</a></li>
-            </ul>
-          </nav>
-        </header>
+        <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<h2>Home Page</h2>} />
-            <Route path="/search" element={<h2>Search Page</h2>} />
-            <Route path="/recipe/:id" element={<h2>Recipe Details</h2>} />
-            <Route path="/profile" element={<h2>Profile Page</h2>} />
-            <Route path="/login" element={<h2>Login Page</h2>} />
-            <Route path="/register" element={<h2>Register Page</h2>} />
+            <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/recipe/:id" element={<RecipeDetail isLoggedIn={isLoggedIn} />} />
+            <Route path="/build" element={<AddRecipe isLoggedIn={isLoggedIn} />} />
+            <Route path="/recipe/edit/:id" element={<AddRecipe isLoggedIn={isLoggedIn} isEditing={true} />} />
+            <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/profile" element={<Profile isLoggedIn={isLoggedIn} />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         
-        <footer>
-          <p>&copy; 2025 SmartRecipe - Xinghang Tong, Tianze Yin</p>
+        <footer className="app-footer">
+          <div className="container">
+            <p>&copy; {new Date().getFullYear()} SmartRecipe - Created by Tianze Yin & Xinghang Tong</p>
+          </div>
         </footer>
       </div>
     </Router>
