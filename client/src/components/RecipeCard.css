@@ -42,3 +42,30 @@
     display: flex;
     justify-content: space-between;
   }
+
+  .view-btn {
+    flex: 1;
+    margin-right: 5px;
+  }
+  
+  .save-btn, .edit-btn {
+    flex: 1;
+    margin-left: 5px;
+    color: #4CAF50;
+    border-color: #e0e0e0;
+  }
+  
+  .save-btn:hover, .edit-btn:hover {
+    background-color: #f5f5f5;
+    color: #2e7d32;
+  }
+  
+  @media (max-width: 768px) {
+    .recipe-card .card-img-top {
+      height: 160px;
+    }
+    
+    .recipe-card .card-title {
+      font-size: 1.1rem;
+    }
+  }
