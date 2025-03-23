@@ -148,4 +148,45 @@ const RecipeDetail = ({ isLoggedIn }) => {
   };
 };
 
+const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    
+    if (!isLoggedIn) {
+      navigate('/login', { state: { from: `/recipe/${id}` } });
+      return;
+    }
+    
+    if (!reviewText.trim()) {
+      return;
+    }
+    
+    try {
+      // This would be an actual API call in future iterations
+      // const response = await axios.post('/api/reviews', {
+      //   recipeId: id,
+      //   comment: reviewText
+      // });
+      
+      // For now, we'll just add the review to the state with mock data
+      const newReview = {
+        _id: Date.now().toString(),
+        userId: localStorage.getItem('userId') || '999',
+        recipeId: id,
+        comment: reviewText,
+        timestamp: new Date().toISOString(),
+        user: {
+          username: 'You' // In a real app, this would be the logged-in user's name
+        }
+      };
+      
+      setReviews([newReview, ...reviews]);
+      setReviewText('');
+      
+      alert('Review added successfully!');
+    } catch (err) {
+      console.error('Error posting review:', err);
+      alert('Failed to post review. Please try again.');
+    }
+  };
+
 export default RecipeDetail;
