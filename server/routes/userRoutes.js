@@ -1,13 +1,68 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+const User = require('../models/User');
 
-// 获取所有食谱
-router.get('/', async (req, res) => {
+// @route   POST /api/users/register
+// @desc    Register a user
+// @access  Public
+router.post('/register', async (req, res) => {
   try {
-    // 数据库操作...
-    res.json(results); // 使用res.json()返回数据
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const { username, email, password } = req.body;
+    
+    // Check if user exists
+    let user = await User.findOne({ email });
+    
+    if (user) {
+      return res.status(400).json({ message: 'User already exists with this email' });
+    }
+    
+    // Check if username is taken
+    user = await User.findOne({ username });
+    
+    if (user) {
+      return res.status(400).json({ message: 'Username is already taken' });
+    }
+    
+    // Create new user
+    user = new User({
+      username,
+      email,
+      password
+    });
+    
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    
+    // Save user to database
+    await user.save();
+    
+    // Create and return JWT token
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+    
+    jwt.sign(
+      payload,
+      config.get('jwtSecret'),
+      { expiresIn: '5d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ 
+          token,
+          userId: user.id,
+          username: user.username
+        });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 });
 
