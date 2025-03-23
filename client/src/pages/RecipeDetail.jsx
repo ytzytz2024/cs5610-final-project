@@ -294,8 +294,56 @@ const RecipeDetail = ({ isLoggedIn }) => {
         </div>
       </div>
 
-
-
+      <div className="reviews-section mt-5">
+        <h2>Reviews</h2>
+        
+        {isLoggedIn ? (
+          <form onSubmit={handleSubmitReview} className="review-form">
+            <div className="mb-3">
+              <textarea
+                className="form-control"
+                rows="3"
+                placeholder="Share your experience with this recipe..."
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                required
+              ></textarea>
+            </div>
+            <button type="submit" className="btn btn-success">Post Review</button>
+          </form>
+        ) : (
+          <div className="alert alert-info">
+            <Link to="/login" className="alert-link">Log in</Link> to share your review
+          </div>
+        )}
+        
+        <div className="reviews-list mt-4">
+          {reviews.length === 0 ? (
+            <p className="text-muted">No reviews yet. Be the first to review this recipe!</p>
+          ) : (
+            reviews.map(review => (
+              <div className="review-item" key={review._id}>
+                <div className="review-header">
+                  <div className="reviewer-info">
+                    <span className="user-icon">👤</span>
+                    <span className="reviewer-name">{review.user.username}</span>
+                  </div>
+                  <div className="review-date">
+                    {new Date(review.timestamp).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </div>
+                </div>
+                <div className="review-content">
+                  {review.comment}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 };
