@@ -196,4 +196,25 @@ router.post('/save-recipe', auth, async (req, res) => {
   }
 });
 
+// @route   DELETE /api/users/unsave-recipe/:id
+// @desc    Remove a recipe from user's saved recipes
+// @access  Private
+router.delete('/unsave-recipe/:id', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    
+    // Remove recipe from saved recipes
+    user.savedRecipes = user.savedRecipes.filter(
+      id => id.toString() !== req.params.id
+    );
+    
+    await user.save();
+    
+    res.json(user.savedRecipes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
