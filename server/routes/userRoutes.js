@@ -66,4 +66,51 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// @route   POST /api/users/login
+// @desc    Authenticate user & get token
+// @access  Public
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    
+    // Check if user exists
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+    
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+    
+    // Create and return JWT token
+    const payload = {
+      user: {
+        id: user.id
+      }
+    };
+    
+    jwt.sign(
+      payload,
+      config.get('jwtSecret'),
+      { expiresIn: '5d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ 
+          token,
+          userId: user.id,
+          username: user.username
+        });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 module.exports = router;
