@@ -134,4 +134,4 @@ This project is licensed under the ISC License
 ## Acknowledgments
 
 - This project was created as the final project for a web development course
-- Authors: Tianze Yin & Xinghang Tong
+- Authors: Xinghang Tong & Tianze Yin
