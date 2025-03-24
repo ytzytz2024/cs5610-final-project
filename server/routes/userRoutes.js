@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const User = require('../models/User');
 const Recipe = require('../models/Recipe');
 const auth = require('../middleware/auth');
@@ -51,7 +50,7 @@ router.post('/register', async (req, res) => {
     
     jwt.sign(
       payload,
-      config.get('jwtSecret'),
+      process.env.JWT_SECRET,
       { expiresIn: '5d' },
       (err, token) => {
         if (err) throw err;
@@ -98,7 +97,7 @@ router.post('/login', async (req, res) => {
     
     jwt.sign(
       payload,
-      config.get('jwtSecret'),
+      process.env.JWT_SECRET,
       { expiresIn: '5d' },
       (err, token) => {
         if (err) throw err;

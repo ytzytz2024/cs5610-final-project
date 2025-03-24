@@ -137,8 +137,6 @@ dist
 
 .DS_Store
 
-default.json
-
 # Build files
 server/public/*
 !server/public/.gitkeep
