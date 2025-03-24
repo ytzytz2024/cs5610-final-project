@@ -183,7 +183,9 @@ const Profile = ({ isLoggedIn }) => {
                   ) : (
                     <div className="row">
                       {createdRecipes.map(recipe => (
-                        <div className="col-md-4 mb-4" key={recipe._id}>
+                        <div className="col-md-4 mb-4" 
+                        key={recipe._id} 
+                        >
                           <RecipeCard recipe={recipe} showSaveButton={false} />
                         </div>
                       ))}
@@ -204,7 +206,9 @@ const Profile = ({ isLoggedIn }) => {
                   ) : (
                     <div className="row">
                       {savedRecipes.map(recipe => (
-                        <div className="col-md-4 mb-4" key={recipe._id}>
+                        <div className="col-md-4 mb-4" 
+                        key={recipe._id} 
+                        >
                           <RecipeCard recipe={recipe} />
                         </div>
                       ))}
