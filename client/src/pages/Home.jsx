@@ -162,7 +162,7 @@ export default function Home({ isLoggedIn }) {
                     <span>{restaurant.timeRange}</span>
                     <span>{restaurant.priceRange}</span>
                   </div>
-                  <button className="btn btn-success w-100 mt-2">Save</button>
+                  <button className="btn btn-success w-100 mt-2">Details</button>
                 </div>
               </div>
             </div>
