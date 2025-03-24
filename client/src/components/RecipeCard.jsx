@@ -8,7 +8,7 @@ const RecipeCard = ({ recipe, showSaveButton = true }) => {
   
   // Image fallback handler
   const handleImageError = (e) => {
-    e.target.src = 'https://via.placeholder.com/300x200?text=Recipe';
+    e.target.src = '/images/placeholder.png';
   };
 
   // Check if current user is the creator of this recipe
@@ -18,7 +18,7 @@ const RecipeCard = ({ recipe, showSaveButton = true }) => {
     <div className="recipe-card-wrapper">
       <div className="card recipe-card h-100">
         <img 
-          src={recipe.image || 'https://via.placeholder.com/300x200?text=Recipe'} 
+          src={recipe.image || '/images/placeholder.png'} 
           className="card-img-top" 
           alt={recipeName}
           onError={handleImageError}
