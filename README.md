@@ -112,6 +112,44 @@ SmartRecipe/
 └── package.json            # Root dependencies and scripts
 ```
 
+## Team Contributions
+
+### Xinghang Tong
+- **Project Setup:**
+  - Initialize project structure (including App.jsx, App.css, main.jsx, index.css)
+  - Deploy the application on render.com
+  - Server setup (server/index.js, server/db.js)
+- **Recipe Management:**
+  - Recipe Card component (RecipeCard.jsx, RecipeCard.css)
+  - Comprehensive Recipe Detail page (RecipeDetail.jsx, RecipeDetail.css)
+  - Complex Recipe Creation interface with validation (AddRecipe.jsx, AddRecipe.css)
+- **UI Components:**
+  - Main Navigation Bar (NavBar.jsx, NavBar.css)
+  - Homepage (Home.jsx, Home.css)
+- **Backend Structure:**
+  - Recipe model (server/models/Recipe.js)
+  - Recipe routes setup (server/routes/recipeRoutes.js)
+  - Review model (server/models/Review.js)
+  - Review routes setup (server/routes/reviewRoutes.js)
+  
+### Tianze Yin
+- **Authentication System:**
+  - Login page (Login.jsx)
+  - Registration page (Register.jsx)
+  - Authentication styling (Auth.css)
+  - Authentication middleware (server/middleware/auth.js)
+- **User Features:**
+  - Profile page (Profile.jsx, Profile.css)
+  - Search page (Search.jsx, Search.css)
+  - Not Found page (NotFound.jsx, NotFound.css)
+- **Backend Structure:**
+  - User model (server/models/User.js)
+  - User routes setup (server/routes/userRoutes.js)
+  
+*Note: All API routes are currently set up as empty route handlers, with the structure in place but no implementation details. These will be filled out in the next iteration to handle actual database operations.*
+
+All features were developed in separate feature branches and merged to main after code review.
+
 ## Authors
 
 - Xinghang Tong
