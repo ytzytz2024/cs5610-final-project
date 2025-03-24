@@ -1,6 +1,8 @@
 # SmartRecipe (Iteration 1)
 
 SmartRecipe is a responsive web application for recipe management built with the MERN stack (MongoDB, Express, React, Node.js). This repository contains the initial implementation (Iteration 1) of the application.
+![image](https://github.com/user-attachments/assets/ba384424-178f-4303-8942-edb421f0c92f)
+
 
 ## Implemented Features
 
