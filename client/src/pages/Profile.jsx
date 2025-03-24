@@ -50,7 +50,7 @@ const Profile = ({ isLoggedIn }) => {
             cookingTime: 30,
             calories: 350,
             userId: '123',
-            image: 'https://via.placeholder.com/300x200?text=Basil+Pasta'
+            image: '/images/placeholder.png'
           },
           {
             _id: '2',
@@ -59,7 +59,7 @@ const Profile = ({ isLoggedIn }) => {
             cookingTime: 15,
             calories: 220,
             userId: '123',
-            image: 'https://via.placeholder.com/300x200?text=Mediterranean+Salad'
+            image: '/images/placeholder.png'
           },
           {
             _id: '3',
@@ -68,7 +68,7 @@ const Profile = ({ isLoggedIn }) => {
             cookingTime: 10,
             calories: 280,
             userId: '123',
-            image: 'https://via.placeholder.com/300x200?text=Smoothie+Bowl'
+            image: '/images/placeholder.png'
           }
         ];
         
@@ -81,7 +81,7 @@ const Profile = ({ isLoggedIn }) => {
             cookingTime: 35,
             calories: 320,
             userId: '456',
-            image: 'https://via.placeholder.com/300x200?text=Vegetable+Curry'
+            image: '/images/placeholder.png'
           },
           {
             _id: '5',
@@ -90,7 +90,7 @@ const Profile = ({ isLoggedIn }) => {
             cookingTime: 20,
             calories: 280,
             userId: '789',
-            image: 'https://via.placeholder.com/300x200?text=Quinoa+Bowl'
+            image: '/images/placeholder.png'
           },
           {
             _id: '6',
@@ -99,7 +99,7 @@ const Profile = ({ isLoggedIn }) => {
             cookingTime: 25,
             calories: 180,
             userId: '101',
-            image: 'https://via.placeholder.com/300x200?text=Zucchini+Noodles'
+            image: '/images/placeholder.png'
           }
         ];
         

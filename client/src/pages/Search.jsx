@@ -46,7 +46,7 @@ const Search = () => {
             cookingTime: 35,
             calories: 410,
             userId: '123',
-            image: 'https://via.placeholder.com/300x200?text=Chicken+Rice+Casserole'
+            image: '/images/placeholder.png'
           },
           {
             _id: '2',
@@ -55,7 +55,7 @@ const Search = () => {
             cookingTime: 25,
             calories: 380,
             userId: '456',
-            image: 'https://via.placeholder.com/300x200?text=Tomato+Chicken+Skillet'
+            image: '/images/placeholder.png'
           },
           {
             _id: '3',
@@ -64,7 +64,7 @@ const Search = () => {
             cookingTime: 30,
             calories: 450,
             userId: '789',
-            image: 'https://via.placeholder.com/300x200?text=Mediterranean+Bowl'
+            image: '/images/placeholder.png'
           }
         ];
         
@@ -95,7 +95,7 @@ const Search = () => {
           cookingTime: 45,
           calories: 520,
           userId: '123',
-          image: 'https://via.placeholder.com/300x200?text=Spaghetti+Bolognese'
+          image: '/images/placeholder.png'
         },
         {
           _id: '5',
@@ -104,7 +104,7 @@ const Search = () => {
           cookingTime: 20,
           calories: 320,
           userId: '456',
-          image: 'https://via.placeholder.com/300x200?text=Vegetable+Stir+Fry'
+          image: '/images/placeholder.png'
         },
         {
           _id: '6',
@@ -113,7 +113,7 @@ const Search = () => {
           cookingTime: 40,
           calories: 580,
           userId: '789',
-          image: 'https://via.placeholder.com/300x200?text=Homemade+Pizza'
+          image: '/images/placeholder.png'
         },
         {
           _id: '7',
@@ -122,7 +122,7 @@ const Search = () => {
           cookingTime: 25,
           calories: 380,
           userId: '101',
-          image: 'https://via.placeholder.com/300x200?text=Caesar+Salad'
+          image: '/images/placeholder.png'
         }
       ];
       

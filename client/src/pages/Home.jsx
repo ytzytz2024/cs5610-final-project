@@ -17,28 +17,28 @@ export default function Home({ isLoggedIn }) {
       {
         id: 1,
         name: "The Rustic Table",
-        image: "/placeholder-restaurant.jpg",
+        image: "/images/placeholder.png",
         priceRange: "$$",
         timeRange: "15-20 min",
       },
       {
         id: 2,
         name: "Fusion Kitchen",
-        image: "/placeholder-restaurant.jpg",
+        image: "/images/placeholder.png",
         priceRange: "$$$",
         timeRange: "20-25 min",
       },
       {
         id: 3,
         name: "Bistro Corner",
-        image: "/placeholder-restaurant.jpg",
+        image: "/images/placeholder.png",
         priceRange: "$$",
         timeRange: "10-15 min",
       },
       {
         id: 4,
         name: "Asian Fusion",
-        image: "/placeholder-restaurant.jpg",
+        image: "/images/placeholder.png",
         priceRange: "$$$",
         timeRange: "25-30 min",
       },
@@ -136,7 +136,7 @@ export default function Home({ isLoggedIn }) {
           <div className="col-md-4 mb-4">
             <div className="card recipe-card">
               <img
-                src="/placeholder-recipe1.jpg"
+                src="/images/placeholder.png"
                 className="card-img-top"
                 alt="Recipe"
               />
@@ -160,7 +160,7 @@ export default function Home({ isLoggedIn }) {
           <div className="col-md-4 mb-4">
             <div className="card recipe-card">
               <img
-                src="/placeholder-recipe2.jpg"
+                src="/images/placeholder.png"
                 className="card-img-top"
                 alt="Recipe"
               />
@@ -184,7 +184,7 @@ export default function Home({ isLoggedIn }) {
           <div className="col-md-4 mb-4">
             <div className="card recipe-card">
               <img
-                src="/placeholder-recipe3.jpg"
+                src="/images/placeholder.png"
                 className="card-img-top"
                 alt="Recipe"
               />
@@ -231,7 +231,7 @@ export default function Home({ isLoggedIn }) {
                   alt={restaurant.name}
                   onError={(e) => {
                     e.target.src =
-                      "https://via.placeholder.com/300x200?text=Restaurant";
+                      "/images/placeholder.png";
                   }}
                 />
                 <div className="card-body">

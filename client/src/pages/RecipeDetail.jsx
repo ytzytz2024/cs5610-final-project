@@ -52,7 +52,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
                 "1. Preheat oven to 375°F (190°C).\n2. In a large bowl, combine all ingredients.\n3. Transfer to a greased baking dish.\n4. Bake for 25-30 minutes until bubbly.\n5. Let stand for 5 minutes before serving.",
               userId: "123",
               image:
-                "https://via.placeholder.com/600x400?text=Chicken+Rice+Casserole",
+                "/images/placeholder.png",
             };
           } else {
             // Default mock recipe if ID doesn't match
@@ -67,7 +67,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
               instructions:
                 "1. Step one of the recipe.\n2. Step two of the recipe.\n3. Step three of the recipe.",
               userId: "456",
-              image: "https://via.placeholder.com/600x400?text=Sample+Recipe",
+              image: "/images/placeholder.png",
             };
           }
 
@@ -262,7 +262,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
         <img
           src={
             recipe.image ||
-            "https://via.placeholder.com/800x500?text=Recipe+Image"
+            "/images/placeholder.png"
           }
           alt={recipe.recipeName}
           className="recipe-detail-image"
