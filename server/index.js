@@ -7,6 +7,10 @@ const path = require('path');
 //load environment variables
 dotenv.config();
 
+if (!process.env.JWT_SECRET) {
+  console.warn('Warning: JWT_SECRET not set, using default secret. This is not secure for production!');
+}
+
 //Initialize Express application
 const app = express();
 const PORT = process.env.PORT || 5001;
