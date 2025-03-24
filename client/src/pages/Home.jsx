@@ -129,84 +129,6 @@ export default function Home({ isLoggedIn }) {
         </div>
       </section>
 
-      {/* Featured Recipes Section for anonymous users */}
-      <section className="featured-recipes my-5">
-        <h2 className="section-title">Popular Recipes</h2>
-        <div className="row">
-          <div className="col-md-4 mb-4">
-            <div className="card recipe-card">
-              <img
-                src="/images/placeholder.png"
-                className="card-img-top"
-                alt="Recipe"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Chicken and Rice Casserole</h5>
-                <p className="card-text">
-                  A comforting and simple dish that uses your available
-                  ingredients efficiently.
-                </p>
-                <div className="recipe-meta">
-                  <span>35 min</span>
-                  <span>410 calories</span>
-                </div>
-                <Link to="/recipe/1" className="btn btn-outline-success">
-                  View Recipe
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-md-4 mb-4">
-            <div className="card recipe-card">
-              <img
-                src="/images/placeholder.png"
-                className="card-img-top"
-                alt="Recipe"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Mediterranean Salad</h5>
-                <p className="card-text">
-                  Fresh and healthy Mediterranean salad with feta cheese and
-                  olives.
-                </p>
-                <div className="recipe-meta">
-                  <span>15 min</span>
-                  <span>220 calories</span>
-                </div>
-                <Link to="/recipe/2" className="btn btn-outline-success">
-                  View Recipe
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-md-4 mb-4">
-            <div className="card recipe-card">
-              <img
-                src="/images/placeholder.png"
-                className="card-img-top"
-                alt="Recipe"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Berry Smoothie Bowl</h5>
-                <p className="card-text">
-                  Nutritious and delicious breakfast option packed with fresh
-                  berries.
-                </p>
-                <div className="recipe-meta">
-                  <span>10 min</span>
-                  <span>280 calories</span>
-                </div>
-                <Link to="/recipe/3" className="btn btn-outline-success">
-                  View Recipe
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Restaurant suggestions section */}
       <section className="restaurants-section my-5">
         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -247,21 +169,6 @@ export default function Home({ isLoggedIn }) {
           ))}
         </div>
       </section>
-
-      {/* Additional content for logged in users */}
-      {isLoggedIn && (
-        <section className="my-recipes-section my-5">
-          <h2 className="section-title">Your Recent Recipes</h2>
-          <div className="row">
-            <div className="col-12 text-center">
-              <p>You haven't created any recipes yet.</p>
-              <Link to="/build" className="btn btn-success">
-                Create Your First Recipe
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   );
 }
