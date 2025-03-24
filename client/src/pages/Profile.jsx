@@ -46,7 +46,7 @@ const Profile = ({ isLoggedIn }) => {
           {
             _id: '1',
             recipeName: 'Fresh Basil Pasta',
-            description: 'A simple and flavorful pasta dish with fresh tomatoes and basil.',
+            description: 'A simple and flavorful pasta dish with fresh tomatoes and basil. A nutritious breakfast bowl with mixed berries and granola. A nutritious breakfast bowl with mixed berries and granola.',
             cookingTime: 30,
             calories: 350,
             userId: '123',
