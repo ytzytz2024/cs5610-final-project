@@ -164,7 +164,7 @@ const Profile = ({ isLoggedIn }) => {
                 className={`tab-btn ${activeTab === 'saved' ? 'active' : ''}`}
                 onClick={() => setActiveTab('saved')}
               >
-                Saved Recipes
+                My Saved Recipes
               </button>
             </div>
             
@@ -173,9 +173,6 @@ const Profile = ({ isLoggedIn }) => {
                 <>
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <h2 className="section-title">My Created Recipes</h2>
-                    <Link to="/build" className="btn btn-success">
-                      <i className="bi bi-plus"></i> New Recipe
-                    </Link>
                   </div>
                   
                   {createdRecipes.length === 0 ? (
@@ -195,7 +192,9 @@ const Profile = ({ isLoggedIn }) => {
                 </>
               ) : (
                 <>
-                  <h2 className="section-title">Saved Recipes</h2>
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2 className="section-title">My Saved Recipes</h2>
+                  </div>
                   
                   {savedRecipes.length === 0 ? (
                     <div className="empty-state">
