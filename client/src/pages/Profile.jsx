@@ -46,7 +46,7 @@ const Profile = ({ isLoggedIn }) => {
           {
             _id: '1',
             recipeName: 'Fresh Basil Pasta',
-            description: 'A simple and flavorful pasta dish with fresh tomatoes and basil.',
+            description: 'A simple and flavorful pasta dish with fresh tomatoes and basil. A nutritious breakfast bowl with mixed berries and granola. A nutritious breakfast bowl with mixed berries and granola.',
             cookingTime: 30,
             calories: 350,
             userId: '123',
@@ -164,7 +164,7 @@ const Profile = ({ isLoggedIn }) => {
                 className={`tab-btn ${activeTab === 'saved' ? 'active' : ''}`}
                 onClick={() => setActiveTab('saved')}
               >
-                Saved Recipes
+                My Saved Recipes
               </button>
             </div>
             
@@ -173,9 +173,6 @@ const Profile = ({ isLoggedIn }) => {
                 <>
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <h2 className="section-title">My Created Recipes</h2>
-                    <Link to="/build" className="btn btn-success">
-                      <i className="bi bi-plus"></i> New Recipe
-                    </Link>
                   </div>
                   
                   {createdRecipes.length === 0 ? (
@@ -186,7 +183,10 @@ const Profile = ({ isLoggedIn }) => {
                   ) : (
                     <div className="row">
                       {createdRecipes.map(recipe => (
-                        <div className="col-md-4 mb-4" key={recipe._id}>
+                        <div className="col-md-4 mb-4" 
+                        key={recipe._id} 
+                        style={{ width: '33.333%', flex: '0 0 33.333%', maxWidth: '33.333%' }}
+                        >
                           <RecipeCard recipe={recipe} showSaveButton={false} />
                         </div>
                       ))}
@@ -195,7 +195,9 @@ const Profile = ({ isLoggedIn }) => {
                 </>
               ) : (
                 <>
-                  <h2 className="section-title">Saved Recipes</h2>
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2 className="section-title">My Saved Recipes</h2>
+                  </div>
                   
                   {savedRecipes.length === 0 ? (
                     <div className="empty-state">
@@ -205,7 +207,10 @@ const Profile = ({ isLoggedIn }) => {
                   ) : (
                     <div className="row">
                       {savedRecipes.map(recipe => (
-                        <div className="col-md-4 mb-4" key={recipe._id}>
+                        <div className="col-md-4 mb-4" 
+                        key={recipe._id}
+                        style={{ width: '33.333%', flex: '0 0 33.333%', maxWidth: '33.333%' }} 
+                        >
                           <RecipeCard recipe={recipe} />
                         </div>
                       ))}
