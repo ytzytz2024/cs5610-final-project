@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npx vite build && cp -R dist/* ../server/public",
+    "build": "vite build; mv dist/* ../server/public",
     "lint": "eslint .",
     "preview": "vite preview"
   },
