@@ -149,7 +149,29 @@ router.put('/:id', auth, upload.single('image'), async (req, res) => {
 // @desc    Delete a recipe
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
-  
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    
+    if (!recipe) {
+      return res.status(404).json({ msg: 'Recipe not found' });
+    }
+    
+    // Check user owns the recipe
+    if (recipe.userId.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' });
+    }
+    
+    await recipe.remove();
+    res.json({ msg: 'Recipe removed' });
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Recipe not found' });
+    }
+    
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route   GET /api/recipes/user/:userId
