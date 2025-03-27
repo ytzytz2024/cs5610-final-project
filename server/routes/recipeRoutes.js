@@ -98,7 +98,7 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
   }
 });
 
-/// @route   PUT /api/recipes/:id
+// @route   PUT /api/recipes/:id
 // @desc    Update a recipe
 // @access  Private
 router.put('/:id', auth, upload.single('image'), async (req, res) => {
