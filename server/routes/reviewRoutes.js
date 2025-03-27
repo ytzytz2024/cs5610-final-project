@@ -50,7 +50,19 @@ router.post('/', auth, async (req, res) => {
 // @desc    Get all reviews for a recipe
 // @access  Public
 router.get('/recipe/:recipeId', async (req, res) => {
-  
+    try {
+      const reviews = await Review.find({ recipeId: req.params.recipeId })
+        .sort({ timestamp: -1 })
+        .populate({
+          path: 'userId',
+          select: 'username'
+        });
+      
+      res.json(reviews);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
 });
 
 // @route   GET /api/reviews/:id
