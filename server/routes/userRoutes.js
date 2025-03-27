@@ -158,4 +158,80 @@ router.put('/profile', auth, async (req, res) => {
   }
 });
 
+// @route   POST /api/users/save-recipe
+// @desc    Save a recipe to user's saved recipes
+// @access  Private
+router.post('/save-recipe', auth, async (req, res) => {
+  try {
+    const { recipeId } = req.body;
+    
+    // Verify recipe exists
+    const recipe = await Recipe.findById(recipeId);
+    
+    if (!recipe) {
+      return res.status(404).json({ msg: 'Recipe not found' });
+    }
+    
+    // Check if recipe is already saved
+    const user = await User.findById(req.user.id);
+    
+    if (user.savedRecipes.includes(recipeId)) {
+      return res.status(400).json({ msg: 'Recipe already saved' });
+    }
+    
+    // Add recipe to saved recipes
+    user.savedRecipes.push(recipeId);
+    await user.save();
+    
+    res.json(user.savedRecipes);
+  } catch (err) {
+    console.error(err.message);
+    
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Recipe not found' });
+    }
+    
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   DELETE /api/users/unsave-recipe/:id
+// @desc    Remove a recipe from user's saved recipes
+// @access  Private
+router.delete('/unsave-recipe/:id', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    
+    // Remove recipe from saved recipes
+    user.savedRecipes = user.savedRecipes.filter(
+      id => id.toString() !== req.params.id
+    );
+    
+    await user.save();
+    
+    res.json(user.savedRecipes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   GET /api/users/saved-recipes
+// @desc    Get user's saved recipes
+// @access  Private
+router.get('/saved-recipes', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    
+    const savedRecipes = await Recipe.find({
+      _id: { $in: user.savedRecipes }
+    });
+    
+    res.json(savedRecipes);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
