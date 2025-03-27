@@ -75,7 +75,27 @@ router.get('/:id', async (req, res) => {
 // @desc    Create a recipe
 // @access  Private
 router.post('/', auth, upload.single('image'), async (req, res) => {
-  
+  try {
+    const { recipeName, description, cookingTime, calories, ingredients, instructions } = req.body;
+    
+    // Create new recipe object
+    const newRecipe = new Recipe({
+      recipeName,
+      description,
+      cookingTime,
+      calories,
+      ingredients: JSON.parse(ingredients),
+      instructions,
+      userId: req.user.id,
+      image: req.file ? `/uploads/recipes/${req.file.filename}` : null
+    });
+    
+    const recipe = await newRecipe.save();
+    res.json(recipe);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route   PUT /api/recipes/:id
