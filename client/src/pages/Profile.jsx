@@ -184,8 +184,7 @@ const Profile = ({ isLoggedIn }) => {
                     <div className="row">
                       {createdRecipes.map(recipe => (
                         <div className="col-md-4 mb-4 flex-fill" 
-                        // key={recipe._id} 
-                        style={{ width: '33.333%', flex: '0 0 33.333%', maxWidth: '33.333%' }}
+                        key={recipe._id}
                         >
                           <RecipeCard recipe={recipe} showSaveButton={false} />
                         </div>
@@ -209,7 +208,6 @@ const Profile = ({ isLoggedIn }) => {
                       {savedRecipes.map(recipe => (
                         <div className="col-md-4 mb-4" 
                         key={recipe._id}
-                        style={{ width: '33.333%', flex: '0 0 33.333%', maxWidth: '33.333%' }} 
                         >
                           <RecipeCard recipe={recipe} />
                         </div>
