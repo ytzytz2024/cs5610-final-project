@@ -156,3 +156,20 @@ exports.deleteReview = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Get all reviews by a user
+exports.getReviewsByUser = async (req, res) => {
+    try {
+      const reviews = await Review.find({ userId: req.params.userId })
+        .sort({ timestamp: -1 })
+        .populate({
+          path: 'recipeId',
+          select: 'recipeName'
+        });
+      
+      res.json(reviews);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  };
