@@ -129,3 +129,14 @@ exports.deleteRecipe = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Get recipes by user ID
+exports.getRecipesByUser = async (req, res) => {
+    try {
+      const recipes = await Recipe.find({ userId: req.params.userId }).sort({ createdAt: -1 });
+      res.json(recipes);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  };
