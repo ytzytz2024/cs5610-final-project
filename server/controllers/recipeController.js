@@ -140,3 +140,28 @@ exports.getRecipesByUser = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Search recipes
+exports.searchRecipes = async (req, res) => {
+    try {
+      const { query } = req.query;
+      
+      if (!query) {
+        return res.status(400).json({ msg: 'Search query is required' });
+      }
+      
+      // Search in recipe name, description, or ingredients
+      const recipes = await Recipe.find({
+        $or: [
+          { recipeName: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } },
+          { ingredients: { $in: [new RegExp(query, 'i')] } }
+        ]
+      }).sort({ createdAt: -1 });
+      
+      res.json(recipes);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  };
