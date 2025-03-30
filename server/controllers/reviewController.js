@@ -39,3 +39,20 @@ exports.createReview = async (req, res) => {
     res.status(500).send('Server Error');
   }
 };
+
+// Get all reviews for a recipe
+exports.getReviewsByRecipe = async (req, res) => {
+    try {
+      const reviews = await Review.find({ recipeId: req.params.recipeId })
+        .sort({ timestamp: -1 })
+        .populate({
+          path: 'userId',
+          select: 'username'
+        });
+      
+      res.json(reviews);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  };
