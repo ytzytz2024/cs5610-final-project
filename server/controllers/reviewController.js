@@ -56,3 +56,27 @@ exports.getReviewsByRecipe = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Get review by ID
+exports.getReviewById = async (req, res) => {
+    try {
+      const review = await Review.findById(req.params.id).populate({
+        path: 'userId',
+        select: 'username'
+      });
+      
+      if (!review) {
+        return res.status(404).json({ msg: 'Review not found' });
+      }
+      
+      res.json(review);
+    } catch (err) {
+      console.error(err.message);
+      
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Review not found' });
+      }
+      
+      res.status(500).send('Server Error');
+    }
+  };
