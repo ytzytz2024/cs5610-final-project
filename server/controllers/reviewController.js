@@ -121,3 +121,38 @@ exports.updateReview = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Delete a review
+exports.deleteReview = async (req, res) => {
+    try {
+      const review = await Review.findById(req.params.id);
+      
+      if (!review) {
+        return res.status(404).json({ msg: 'Review not found' });
+      }
+      
+      // Check user owns the review
+      if (review.userId.toString() !== req.user.id) {
+        return res.status(401).json({ msg: 'User not authorized' });
+      }
+      
+      // Remove review reference from recipe
+      await Recipe.updateOne(
+        { _id: review.recipeId },
+        { $pull: { reviews: review._id } }
+      );
+      
+      // Delete review
+      await Review.findByIdAndRemove(req.params.id);
+      
+      res.json({ msg: 'Review removed' });
+    } catch (err) {
+      console.error(err.message);
+      
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Review not found' });
+      }
+      
+      res.status(500).send('Server Error');
+    }
+  };
