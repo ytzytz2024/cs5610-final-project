@@ -57,3 +57,48 @@ exports.createRecipe = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Update a recipe
+exports.updateRecipe = async (req, res) => {
+    try {
+      let recipe = await Recipe.findById(req.params.id);
+      
+      if (!recipe) {
+        return res.status(404).json({ msg: 'Recipe not found' });
+      }
+      
+      // Check user owns the recipe
+      if (recipe.userId.toString() !== req.user.id) {
+        return res.status(401).json({ msg: 'User not authorized' });
+      }
+      
+      const { recipeName, description, cookingTime, calories, ingredients, instructions } = req.body;
+      
+      // Build recipe object
+      const recipeFields = {};
+      if (recipeName) recipeFields.recipeName = recipeName;
+      if (description) recipeFields.description = description;
+      if (cookingTime) recipeFields.cookingTime = cookingTime;
+      if (calories) recipeFields.calories = calories;
+      if (ingredients) recipeFields.ingredients = JSON.parse(ingredients);
+      if (instructions) recipeFields.instructions = instructions;
+      if (req.file) recipeFields.image = `/uploads/recipes/${req.file.filename}`;
+      
+      // Update recipe
+      recipe = await Recipe.findByIdAndUpdate(
+        req.params.id,
+        { $set: recipeFields },
+        { new: true }
+      );
+      
+      res.json(recipe);
+    } catch (err) {
+      console.error(err.message);
+      
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Recipe not found' });
+      }
+      
+      res.status(500).send('Server Error');
+    }
+  };
