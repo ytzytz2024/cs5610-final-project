@@ -102,3 +102,30 @@ exports.updateRecipe = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Delete a recipe
+exports.deleteRecipe = async (req, res) => {
+    try {
+      const recipe = await Recipe.findById(req.params.id);
+      
+      if (!recipe) {
+        return res.status(404).json({ msg: 'Recipe not found' });
+      }
+      
+      // Check user owns the recipe
+      if (recipe.userId.toString() !== req.user.id) {
+        return res.status(401).json({ msg: 'User not authorized' });
+      }
+      
+      await Recipe.findByIdAndRemove(req.params.id);
+      res.json({ msg: 'Recipe removed' });
+    } catch (err) {
+      console.error(err.message);
+      
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Recipe not found' });
+      }
+      
+      res.status(500).send('Server Error');
+    }
+  };
