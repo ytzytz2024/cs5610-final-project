@@ -80,3 +80,44 @@ exports.getReviewById = async (req, res) => {
       res.status(500).send('Server Error');
     }
   };
+
+// Update a review
+exports.updateReview = async (req, res) => {
+    try {
+      const { comment } = req.body;
+      
+      // Find review
+      let review = await Review.findById(req.params.id);
+      
+      if (!review) {
+        return res.status(404).json({ msg: 'Review not found' });
+      }
+      
+      // Check user owns the review
+      if (review.userId.toString() !== req.user.id) {
+        return res.status(401).json({ msg: 'User not authorized' });
+      }
+      
+      // Update review
+      review.comment = comment;
+      review.timestamp = Date.now();
+      
+      await review.save();
+      
+      // Populate user data for the response
+      const updatedReview = await Review.findById(review._id).populate({
+        path: 'userId',
+        select: 'username'
+      });
+      
+      res.json(updatedReview);
+    } catch (err) {
+      console.error(err.message);
+      
+      if (err.kind === 'ObjectId') {
+        return res.status(404).json({ msg: 'Review not found' });
+      }
+      
+      res.status(500).send('Server Error');
+    }
+  };
