@@ -13,3 +13,14 @@ API.interceptors.request.use((config) => {
   }
   return config;
 });
+
+// API services for recipes
+export const RecipeService = {
+    getAllRecipes: () => API.get('/recipes'),
+    getRecipeById: (id) => API.get(`/recipes/${id}`),
+    searchRecipes: (query) => API.get(`/recipes/search?query=${query}`),
+    createRecipe: (formData) => API.post('/recipes', formData),
+    updateRecipe: (id, formData) => API.put(`/recipes/${id}`, formData),
+    deleteRecipe: (id) => API.delete(`/recipes/${id}`),
+    getRecipesByUser: (userId) => API.get(`/recipes/user/${userId}`),
+  };
