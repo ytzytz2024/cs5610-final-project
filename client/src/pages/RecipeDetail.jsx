@@ -84,6 +84,36 @@ const RecipeDetail = ({ isLoggedIn }) => {
     }
   };
 
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+
+    if (!isLoggedIn) {
+      navigate("/login", { state: { from: `/recipe/${id}` } });
+      return;
+    }
+
+    if (!reviewText.trim()) {
+      return;
+    }
+
+    try {
+      setSubmittingReview(true);
+      const response = await ReviewService.createReview({
+        recipeId: id,
+        comment: reviewText
+      });
+
+      // Add the new review to the top of the reviews list
+      setReviews([response.data, ...reviews]);
+      setReviewText("");
+      setSubmittingReview(false);
+    } catch (err) {
+      console.error("Error posting review:", err);
+      alert("Failed to post review. Please try again.");
+      setSubmittingReview(false);
+    }
+  };
+
 
 
 
