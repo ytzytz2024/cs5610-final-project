@@ -10,9 +10,11 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate("/login", { state: { from: isEditing ? `/recipe/edit/${id}` : "/build" } });
+      navigate("/login", {
+        state: { from: isEditing ? `/recipe/edit/${id}` : "/build" },
+      });
     }
-    
+
     // If editing, fetch the recipe data
     if (isEditing && id) {
       fetchRecipeData();
@@ -40,7 +42,7 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
       setIsLoadingRecipe(true);
       const response = await RecipeService.getRecipeById(id);
       const recipe = response.data;
-      
+
       // Check if user is the creator of the recipe
       const userId = localStorage.getItem("userId");
       if (recipe.userId !== userId) {
@@ -52,8 +54,8 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
       // Format instructions as array for form
       const instructionsArray = recipe.instructions
         .split("\n")
-        .map(step => step.trim())
-        .filter(step => step);
+        .map((step) => step.trim())
+        .filter((step) => step);
 
       // Set recipe data in form
       setRecipeData({
@@ -230,13 +232,13 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
       }
 
       setLoading(false);
-      
-      const successMessage = isEditing 
-        ? "Recipe updated successfully!" 
+
+      const successMessage = isEditing
+        ? "Recipe updated successfully!"
         : "Recipe created successfully!";
-      
+
       alert(successMessage);
-      
+
       // Navigate to recipe detail page
       navigate(`/recipe/${isEditing ? id : response.data._id}`);
     } catch (err) {
@@ -263,7 +265,9 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
 
   return (
     <div className="add-recipe-container">
-      <h1 className="page-title">Create Your Recipe</h1>
+      <h1 className="page-title">
+        {isEditing ? "Edit Recipe" : "Create Your Recipe"}
+      </h1>
 
       {Object.keys(errors).length > 0 && (
         <div className="alert alert-danger">
@@ -339,7 +343,10 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
 
         <div className="mb-4">
           <label htmlFor="recipeImage" className="form-label">
-            Recipe Cover
+            Recipe Cover{" "}
+            {isEditing &&
+              !recipeData.image &&
+              "(Leave empty to keep current image)"}
           </label>
           <div className="custom-file-upload">
             {imagePreview ? (
@@ -480,8 +487,10 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
                   role="status"
                   aria-hidden="true"
                 ></span>
-                Creating Recipe...
+                {isEditing ? "Updating Recipe..." : "Creating Recipe..."}
               </>
+            ) : isEditing ? (
+              "Update Recipe"
             ) : (
               "Publish Recipe"
             )}
