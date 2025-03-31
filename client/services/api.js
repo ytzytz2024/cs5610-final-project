@@ -24,3 +24,14 @@ export const RecipeService = {
     deleteRecipe: (id) => API.delete(`/recipes/${id}`),
     getRecipesByUser: (userId) => API.get(`/recipes/user/${userId}`),
   };
+
+// API services for users
+export const UserService = {
+    register: (userData) => API.post('/users/register', userData),
+    login: (credentials) => API.post('/users/login', credentials),
+    getProfile: () => API.get('/users/profile'),
+    updateProfile: (userData) => API.put('/users/profile', userData),
+    saveRecipe: (recipeId) => API.post('/users/save-recipe', { recipeId }),
+    unsaveRecipe: (recipeId) => API.delete(`/users/unsave-recipe/${recipeId}`),
+    getSavedRecipes: () => API.get('/users/saved-recipes'),
+  };
