@@ -38,7 +38,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
           try {
             const savedRecipesResponse = await UserService.getSavedRecipes();
             const savedRecipes = savedRecipesResponse.data;
-            if (savedRecipes.some(recipe => recipe._id === id)) {
+            if (savedRecipes.some((recipe) => recipe._id === id)) {
               setIsSaved(true);
             }
           } catch (err) {
@@ -112,7 +112,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
       setSubmittingReview(true);
       const response = await ReviewService.createReview({
         recipeId: id,
-        comment: reviewText
+        comment: reviewText,
       });
 
       // Add the new review to the top of the reviews list
@@ -137,9 +137,9 @@ const RecipeDetail = ({ isLoggedIn }) => {
       try {
         setDeletingReviewId(reviewId);
         await ReviewService.deleteReview(reviewId);
-        
+
         // Remove the deleted review from the state
-        setReviews(reviews.filter(review => review._id !== reviewId));
+        setReviews(reviews.filter((review) => review._id !== reviewId));
         setDeletingReviewId(null);
       } catch (err) {
         console.error("Error deleting review:", err);
@@ -195,14 +195,18 @@ const RecipeDetail = ({ isLoggedIn }) => {
         </button>
 
         {!isCreator && (
-          <button 
-            className="btn btn-success ms-2" 
+          <button
+            className="btn btn-success ms-2"
             onClick={handleSaveRecipe}
             disabled={savingRecipe || isSaved}
           >
             {savingRecipe ? (
               <>
-                <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                <span
+                  className="spinner-border spinner-border-sm me-1"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
                 Saving...
               </>
             ) : isSaved ? (
@@ -229,7 +233,11 @@ const RecipeDetail = ({ isLoggedIn }) => {
             >
               {deletingRecipe ? (
                 <>
-                  <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  <span
+                    className="spinner-border spinner-border-sm me-1"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                   Deleting...
                 </>
               ) : (
@@ -300,18 +308,22 @@ const RecipeDetail = ({ isLoggedIn }) => {
                 disabled={submittingReview}
               ></textarea>
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-success"
               disabled={submittingReview || !reviewText.trim()}
             >
               {submittingReview ? (
                 <>
-                  <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  <span
+                    className="spinner-border spinner-border-sm me-1"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                   Posting...
                 </>
               ) : (
-                'Post Review'
+                "Post Review"
               )}
             </button>
           </form>
@@ -332,8 +344,9 @@ const RecipeDetail = ({ isLoggedIn }) => {
           ) : (
             reviews.map((review) => {
               // Check if the current user is the author of the review
-              const isReviewAuthor = review.userId?._id === localStorage.getItem('userId');
-              
+              const isReviewAuthor =
+                review.userId?._id === localStorage.getItem("userId");
+
               return (
                 <div className="review-item" key={review._id}>
                   <div className="review-header">
@@ -345,22 +358,29 @@ const RecipeDetail = ({ isLoggedIn }) => {
                     </div>
                     <div className="d-flex align-items-center">
                       <div className="review-date me-3">
-                        {new Date(review.timestamp).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
+                        {new Date(review.timestamp).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
                       </div>
-                      
+
                       {/* Show delete button only for the current user's reviews */}
                       {isReviewAuthor && (
-                        <button 
-                          className="btn btn-sm btn-outline-danger" 
+                        <button
+                          className="btn btn-sm btn-outline-danger"
                           onClick={() => handleDeleteReview(review._id)}
                           disabled={deletingReviewId === review._id}
                         >
                           {deletingReviewId === review._id ? (
-                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            <span
+                              className="spinner-border spinner-border-sm"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
                           ) : (
                             <i className="bi bi-trash"></i>
                           )}
