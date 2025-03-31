@@ -81,11 +81,6 @@ const Profile = ({ isLoggedIn }) => {
               <div className="profile-details">
                 <h1 className="profile-name">{user?.username}</h1>
                 <p className="profile-email">{user?.email}</p>
-                <div className="profile-preferences">
-                  {user?.preferences && user?.preferences.map((pref, index) => (
-                    <span key={index} className="preference-tag">{pref}</span>
-                  ))}
-                </div>
               </div>
             </div>
             <button 
@@ -117,6 +112,9 @@ const Profile = ({ isLoggedIn }) => {
                 <>
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <h2 className="section-title">My Created Recipes</h2>
+                    <Link to="/build" className="btn btn-success">
+                      <i className="bi bi-plus-lg"></i> Create New Recipe
+                    </Link>
                   </div>
                   
                   {createdRecipes.length === 0 ? (
