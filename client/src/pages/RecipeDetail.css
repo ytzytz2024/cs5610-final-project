@@ -134,6 +134,7 @@ h2:after {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
+  align-items: center;
 }
 
 .reviewer-info {
@@ -159,6 +160,7 @@ h2:after {
 .review-content {
   line-height: 1.6;
   color: #444;
+  margin-top: 5px;
 }
 
 @media print {
