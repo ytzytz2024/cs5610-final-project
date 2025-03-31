@@ -250,6 +250,17 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
     return null; // Return null for initial render before redirect
   }
 
+  if (isLoadingRecipe) {
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Loading recipe data...</span>
+        </div>
+        <p className="mt-2">Loading recipe data...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="add-recipe-container">
       <h1 className="page-title">Create Your Recipe</h1>
