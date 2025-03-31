@@ -75,8 +75,18 @@ const RecipeCard = ({ recipe, showSaveButton = true, onUnsave = null }) => {
             </Link>
             
             {showSaveButton && !isCreator && (
-              <button className="btn btn-light save-btn">
-                Save
+              <button 
+                className="btn btn-light save-btn"
+                onClick={handleSaveRecipe}
+                disabled={isSaving || isSaved}
+              >
+                {isSaving ? (
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                ) : isSaved ? (
+                  <span>Saved</span>
+                ) : (
+                  <span>Save</span>
+                )}
               </button>
             )}
             
@@ -84,6 +94,15 @@ const RecipeCard = ({ recipe, showSaveButton = true, onUnsave = null }) => {
               <Link to={`/recipe/edit/${_id}`} className="btn btn-light edit-btn">
                 Edit
               </Link>
+            )}
+            
+            {onUnsave && (
+              <button 
+                className="btn btn-outline-danger unsave-btn"
+                onClick={handleUnsaveRecipe}
+              >
+                Unsave
+              </button>
             )}
           </div>
         </div>
@@ -102,7 +121,8 @@ RecipeCard.propTypes = {
     userId: PropTypes.string,
     image: PropTypes.string
   }).isRequired,
-  showSaveButton: PropTypes.bool
+  showSaveButton: PropTypes.bool,
+  onUnsave: PropTypes.func
 };
 
 export default RecipeCard;
