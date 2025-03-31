@@ -16,17 +16,19 @@ const Search = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const ingredientsParam = queryParams.get('ingredients');
+  const searchParam = queryParams.get('query');
   
   useEffect(() => {
-    // If there are ingredients in URL, set them as search query and trigger search
-    if (ingredientsParam) {
-      setSearchQuery(ingredientsParam.replace(',', ', '));
-      fetchRecipes(ingredientsParam);
+    // If there are ingredients or search term in URL, set them as search query and trigger search
+    if (ingredientsParam || searchParam) {
+      const query = ingredientsParam || searchParam;
+      setSearchQuery(query.replace(',', ', '));
+      fetchRecipes(query);
     } else {
       // Otherwise, fetch some recent/popular recipes
       fetchPopularRecipes();
     }
-  }, [ingredientsParam]);
+  }, [ingredientsParam, searchParam]);
   
   const fetchRecipes = async (query) => {
     setIsLoading(true);
