@@ -56,15 +56,12 @@ export default function Home({ isLoggedIn }) {
   };
 
   const handleFindRecipes = () => {
-    // This would be connected to AI API in future iterations
+    if (ingredients.length === 0) return;
+    
     setIsLoading(true);
-
-    // Simulate API call with timeout
-    setTimeout(() => {
-      setIsLoading(false);
-      // Navigate to search results - to be implemented with React Router
-      window.location.href = `/search?ingredients=${ingredients.join(",")}`;
-    }, 1000);
+    
+    // Navigate to search page with ingredients as query parameters
+    navigate(`/search?ingredients=${ingredients.join(",")}`);
   };
 
   return (
