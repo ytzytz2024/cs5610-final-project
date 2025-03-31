@@ -43,6 +43,34 @@ const RecipeDetail = ({ isLoggedIn }) => {
 
     fetchRecipeDetails();
   }, [id, isLoggedIn]);
+
+
+  const handleSaveRecipe = async () => {
+    if (!isLoggedIn) {
+      navigate("/login", { state: { from: `/recipe/${id}` } });
+      return;
+    }
+
+    try {
+      setSavingRecipe(true);
+      await UserService.saveRecipe(id);
+      setIsSaved(true);
+      setSavingRecipe(false);
+      alert("Recipe saved successfully!");
+    } catch (err) {
+      console.error("Error saving recipe:", err);
+      alert("Failed to save recipe. Please try again.");
+      setSavingRecipe(false);
+    }
+  };
+
+
+
+
+
+
+
+
 };
 
 export default RecipeDetail;
