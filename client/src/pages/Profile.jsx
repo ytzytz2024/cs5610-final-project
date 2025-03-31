@@ -1,6 +1,7 @@
+// client/src/pages/Profile.jsx
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { UserService, RecipeService } from "../services/api";
 import RecipeCard from '../components/RecipeCard';
 import './Profile.css';
 
@@ -25,89 +26,21 @@ const Profile = ({ isLoggedIn }) => {
     setLoading(true);
     
     try {
-      // For iteration 1, we'll use mock data
-      // In future iterations, this would be actual API calls:
-      // const userRes = await axios.get('/api/users/profile');
-      // const createdRes = await axios.get('/api/recipes/user');
-      // const savedRes = await axios.get('/api/users/saved-recipes');
+      // Get user profile data
+      const userResponse = await UserService.getProfile();
+      const userData = userResponse.data;
+      setUser(userData);
+
+      // Get user's created recipes
+      const userId = userData._id;
+      const createdResponse = await RecipeService.getRecipesByUser(userId);
+      setCreatedRecipes(createdResponse.data);
+
+      // Get user's saved recipes
+      const savedResponse = await UserService.getSavedRecipes();
+      setSavedRecipes(savedResponse.data);
       
-      // Simulate API delay
-      setTimeout(() => {
-        // Mock user data
-        const mockUser = {
-          _id: '123',
-          username: 'Chen XiaoMei',
-          email: 'xiaomei.chen@example.com',
-          preferences: ['Vegetarian', 'Low Carb']
-        };
-        
-        // Mock created recipes
-        const mockCreatedRecipes = [
-          {
-            _id: '1',
-            recipeName: 'Fresh Basil Pasta',
-            description: 'A simple and flavorful pasta dish with fresh tomatoes and basil. A nutritious breakfast bowl with mixed berries and granola. A nutritious breakfast bowl with mixed berries and granola.',
-            cookingTime: 30,
-            calories: 350,
-            userId: '123',
-            image: '/images/placeholder.png'
-          },
-          {
-            _id: '2',
-            recipeName: 'Mediterranean Salad',
-            description: 'A refreshing salad with feta cheese, olives, and vegetables.',
-            cookingTime: 15,
-            calories: 220,
-            userId: '123',
-            image: '/images/placeholder.png'
-          },
-          {
-            _id: '3',
-            recipeName: 'Berry Smoothie Bowl',
-            description: 'A nutritious breakfast bowl with mixed berries and granola.',
-            cookingTime: 10,
-            calories: 280,
-            userId: '123',
-            image: '/images/placeholder.png'
-          }
-        ];
-        
-        // Mock saved recipes
-        const mockSavedRecipes = [
-          {
-            _id: '4',
-            recipeName: 'Vegetable Curry',
-            description: 'A flavorful vegetable curry with coconut milk.',
-            cookingTime: 35,
-            calories: 320,
-            userId: '456',
-            image: '/images/placeholder.png'
-          },
-          {
-            _id: '5',
-            recipeName: 'Quinoa Bowl',
-            description: 'A healthy quinoa bowl with avocado and chickpeas.',
-            cookingTime: 20,
-            calories: 280,
-            userId: '789',
-            image: '/images/placeholder.png'
-          },
-          {
-            _id: '6',
-            recipeName: 'Zucchini Noodles',
-            description: 'Low-carb zucchini noodles with tomato sauce.',
-            cookingTime: 25,
-            calories: 180,
-            userId: '101',
-            image: '/images/placeholder.png'
-          }
-        ];
-        
-        setUser(mockUser);
-        setCreatedRecipes(mockCreatedRecipes);
-        setSavedRecipes(mockSavedRecipes);
-        setLoading(false);
-      }, 1000);
+      setLoading(false);
     } catch (err) {
       console.error('Error fetching user data:', err);
       setLoading(false);
@@ -138,7 +71,7 @@ const Profile = ({ isLoggedIn }) => {
                 <h1 className="profile-name">{user?.username}</h1>
                 <p className="profile-email">{user?.email}</p>
                 <div className="profile-preferences">
-                  {user?.preferences.map((pref, index) => (
+                  {user?.preferences && user?.preferences.map((pref, index) => (
                     <span key={index} className="preference-tag">{pref}</span>
                   ))}
                 </div>
@@ -183,7 +116,7 @@ const Profile = ({ isLoggedIn }) => {
                   ) : (
                     <div className="row">
                       {createdRecipes.map(recipe => (
-                        <div className="col-md-4 mb-4 flex-fill" 
+                        <div className="col-md-4 mb-4" 
                         key={recipe._id}
                         >
                           <RecipeCard recipe={recipe} showSaveButton={false} />
