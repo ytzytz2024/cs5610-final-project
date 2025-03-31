@@ -1,6 +1,7 @@
+// client/src/pages/Search.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { RecipeService } from '../services/api';
 import RecipeCard from '../components/RecipeCard';
 import './Search.css';
 
@@ -32,49 +33,9 @@ const Search = () => {
     setError(null);
     
     try {
-      // For iteration 1, we'll use mock data
-      // In the future, this would be a real API call
-      
-      // Simulating API response delay
-      setTimeout(() => {
-        // Mock data for search results
-        const mockRecipes = [
-          {
-            _id: '1',
-            recipeName: 'Chicken and Rice Casserole with Tomato',
-            description: 'A comforting and simple dish that uses your available ingredients efficiently.',
-            cookingTime: 35,
-            calories: 410,
-            userId: '123',
-            image: '/images/placeholder.png'
-          },
-          {
-            _id: '2',
-            recipeName: 'Tomato Chicken Skillet with Rice',
-            description: 'A quick one-pan meal perfect for weeknight dinners.',
-            cookingTime: 25,
-            calories: 380,
-            userId: '456',
-            image: '/images/placeholder.png'
-          },
-          {
-            _id: '3',
-            recipeName: 'Mediterranean Chicken Rice Bowl',
-            description: 'A healthy and flavorful bowl packed with Mediterranean-inspired ingredients.',
-            cookingTime: 30,
-            calories: 450,
-            userId: '789',
-            image: '/images/placeholder.png'
-          }
-        ];
-        
-        setRecipes(mockRecipes);
-        setIsLoading(false);
-      }, 1000);
-      
-      // In future iterations, this would be:
-      // const response = await axios.get(`/api/recipes/search?query=${query}`);
-      // setRecipes(response.data);
+      const response = await RecipeService.searchRecipes(query);
+      setRecipes(response.data);
+      setIsLoading(false);
     } catch (err) {
       setError('Failed to fetch recipes. Please try again later.');
       setIsLoading(false);
@@ -82,53 +43,18 @@ const Search = () => {
     }
   };
   
-  const fetchPopularRecipes = () => {
+  const fetchPopularRecipes = async () => {
     setIsLoading(true);
     
-    // Mock data for popular recipes
-    setTimeout(() => {
-      const popularRecipes = [
-        {
-          _id: '4',
-          recipeName: 'Classic Spaghetti Bolognese',
-          description: 'Traditional Italian pasta dish with a rich meat sauce.',
-          cookingTime: 45,
-          calories: 520,
-          userId: '123',
-          image: '/images/placeholder.png'
-        },
-        {
-          _id: '5',
-          recipeName: 'Vegetable Stir Fry',
-          description: 'Quick and healthy vegetable stir fry with your choice of protein.',
-          cookingTime: 20,
-          calories: 320,
-          userId: '456',
-          image: '/images/placeholder.png'
-        },
-        {
-          _id: '6',
-          recipeName: 'Homemade Pizza',
-          description: 'Easy homemade pizza with your favorite toppings.',
-          cookingTime: 40,
-          calories: 580,
-          userId: '789',
-          image: '/images/placeholder.png'
-        },
-        {
-          _id: '7',
-          recipeName: 'Chicken Caesar Salad',
-          description: 'Classic Caesar salad with grilled chicken and homemade dressing.',
-          cookingTime: 25,
-          calories: 380,
-          userId: '101',
-          image: '/images/placeholder.png'
-        }
-      ];
-      
-      setRecipes(popularRecipes);
+    try {
+      const response = await RecipeService.getAllRecipes();
+      setRecipes(response.data);
       setIsLoading(false);
-    }, 1000);
+    } catch (err) {
+      setError('Failed to fetch recipes. Please try again later.');
+      setIsLoading(false);
+      console.error('Error fetching popular recipes:', err);
+    }
   };
   
   const handleSearch = (e) => {
