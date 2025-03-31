@@ -209,12 +209,12 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
     setLoading(true);
 
     try {
-      // Prepare data for submission
+      // Prepare form data for submission
       const formData = new FormData();
       formData.append("recipeName", recipeData.recipeName);
       formData.append("description", recipeData.description);
       formData.append("cookingTime", recipeData.cookingTime);
-      formData.append("calories", recipeData.calories);
+      formData.append("calories", recipeData.calories || 0);
       formData.append("ingredients", JSON.stringify(recipeData.ingredients));
       formData.append("instructions", recipeData.instructions.join("\n"));
 
@@ -222,24 +222,27 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
         formData.append("image", recipeData.image);
       }
 
-      // For iteration 1, we'll simulate a successful response
-      // In future iterations, this would be:
-      // const response = await axios.post('/api/recipes', formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data'
-      //   }
-      // });
+      let response;
+      if (isEditing) {
+        response = await RecipeService.updateRecipe(id, formData);
+      } else {
+        response = await RecipeService.createRecipe(formData);
+      }
 
-      // Simulate API delay
-      setTimeout(() => {
-        setLoading(false);
-        alert("Recipe created successfully!");
-        navigate("/profile"); // Navigate to profile or recipe detail
-      }, 1500);
+      setLoading(false);
+      
+      const successMessage = isEditing 
+        ? "Recipe updated successfully!" 
+        : "Recipe created successfully!";
+      
+      alert(successMessage);
+      
+      // Navigate to recipe detail page
+      navigate(`/recipe/${isEditing ? id : response.data._id}`);
     } catch (err) {
       setLoading(false);
-      console.error("Error creating recipe:", err);
-      alert("Failed to create recipe. Please try again.");
+      console.error("Error saving recipe:", err);
+      alert("Failed to save recipe. Please try again.");
     }
   };
 
