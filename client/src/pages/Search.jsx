@@ -1,4 +1,3 @@
-// client/src/pages/Search.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { RecipeService } from '../services/api';
@@ -100,7 +99,7 @@ const Search = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="Search ingredients (e.g. chicken, rice, tomatoes)"
+              placeholder="Search ingredients or recipe names"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
