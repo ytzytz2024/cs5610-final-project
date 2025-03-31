@@ -1,17 +1,23 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { RecipeService } from "../services/api";
 import "./AddRecipe.css";
 
-const AddRecipe = ({ isLoggedIn }) => {
+const AddRecipe = ({ isLoggedIn, isEditing }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   // Redirect to login if not authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isLoggedIn) {
-      navigate("/login", { state: { from: "/build" } });
+      navigate("/login", { state: { from: isEditing ? `/recipe/edit/${id}` : "/build" } });
     }
-  }, [isLoggedIn, navigate]);
+    
+    // If editing, fetch the recipe data
+    if (isEditing && id) {
+      fetchRecipeData();
+    }
+  }, [isLoggedIn, navigate, isEditing, id]);
 
   const [recipeData, setRecipeData] = useState({
     recipeName: "",
