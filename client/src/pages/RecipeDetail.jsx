@@ -137,6 +137,33 @@ const RecipeDetail = ({ isLoggedIn }) => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <p className="mt-2">Loading recipe details...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="alert alert-danger m-5" role="alert">
+        {error}
+      </div>
+    );
+  }
+
+  if (!recipe) {
+    return (
+      <div className="alert alert-warning m-5" role="alert">
+        Recipe not found.
+      </div>
+    );
+  }
+
 
 
 
