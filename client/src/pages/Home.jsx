@@ -57,9 +57,9 @@ export default function Home({ isLoggedIn }) {
 
   const handleFindRecipes = () => {
     if (ingredients.length === 0) return;
-    
+
     setIsLoading(true);
-    
+
     // Navigate to search page with ingredients as query parameters
     navigate(`/search?ingredients=${ingredients.join(",")}`);
   };
@@ -140,8 +140,7 @@ export default function Home({ isLoggedIn }) {
                   className="card-img-top"
                   alt={restaurant.name}
                   onError={(e) => {
-                    e.target.src =
-                      "/images/placeholder.png";
+                    e.target.src = "/images/placeholder.png";
                   }}
                 />
                 <div className="card-body">
@@ -150,7 +149,9 @@ export default function Home({ isLoggedIn }) {
                     <span>{restaurant.timeRange}</span>
                     <span>{restaurant.priceRange}</span>
                   </div>
-                  <button className="btn btn-success w-100 mt-2">Details</button>
+                  <button className="btn btn-success w-100 mt-2">
+                    Details
+                  </button>
                 </div>
               </div>
             </div>
