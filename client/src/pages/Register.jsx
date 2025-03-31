@@ -1,4 +1,3 @@
-// client/src/pages/Register.jsx (Modified version)
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserService } from '../services/api';

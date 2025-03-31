@@ -1,6 +1,7 @@
+// client/src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import axios from 'axios';
+import { UserService } from './services/api';
 
 // Components
 import NavBar from './components/NavBar';
@@ -22,19 +23,43 @@ import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   
   // Check if user is logged in on app load
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // For iteration 1, we'll just check if token exists
-      // In future iterations, we would verify the token with the backend
-      setIsLoggedIn(true);
-      
-      // Set up axios default headers for authenticated requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    }
+    const verifyToken = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          // Verify the token with the backend
+          await UserService.getProfile();
+          setIsLoggedIn(true);
+        } catch (error) {
+          // Token invalid, clear localStorage
+          localStorage.removeItem('token');
+          localStorage.removeItem('userId');
+          console.error('Authentication error:', error);
+        } finally {
+          setIsCheckingAuth(false);
+        }
+      } else {
+        setIsCheckingAuth(false);
+      }
+    };
+    
+    verifyToken();
   }, []);
+  
+  if (isCheckingAuth) {
+    // Show loading indicator while checking authentication
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <Router>
