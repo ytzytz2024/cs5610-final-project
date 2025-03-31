@@ -1,6 +1,7 @@
+// client/src/pages/Register.jsx (Modified version)
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { UserService } from '../services/api';
 import './Auth.css';
 
 const Register = ({ setIsLoggedIn }) => {
@@ -70,26 +71,18 @@ const Register = ({ setIsLoggedIn }) => {
     setLoading(true);
     
     try {
-      // For iteration 1, we'll simulate a successful registration
-      // In future iterations, this would be an actual API call:
-      // const response = await axios.post('/api/users/register', {
-      //   username: formData.username,
-      //   email: formData.email,
-      //   password: formData.password
-      // });
-      // localStorage.setItem('token', response.data.token);
-      // localStorage.setItem('userId', response.data.userId);
+      const response = await UserService.register({
+        username: formData.username,
+        email: formData.email,
+        password: formData.password
+      });
       
-      // Simulate API delay
-      setTimeout(() => {
-        // Mock successful registration
-        localStorage.setItem('token', 'mock-jwt-token');
-        localStorage.setItem('userId', '123'); // mock user ID
-        
-        setIsLoggedIn(true);
-        setLoading(false);
-        navigate('/');
-      }, 1000);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.userId);
+      
+      setIsLoggedIn(true);
+      setLoading(false);
+      navigate('/');
     } catch (err) {
       setLoading(false);
       
