@@ -64,6 +64,25 @@ const RecipeDetail = ({ isLoggedIn }) => {
     }
   };
 
+  const handleDeleteRecipe = async () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this recipe? This action cannot be undone."
+      )
+    ) {
+      try {
+        setDeletingRecipe(true);
+        await RecipeService.deleteRecipe(id);
+        setDeletingRecipe(false);
+        alert("Recipe deleted successfully!");
+        navigate("/profile");
+      } catch (err) {
+        console.error("Error deleting recipe:", err);
+        alert("Failed to delete recipe. Please try again.");
+        setDeletingRecipe(false);
+      }
+    }
+  };
 
 
 
