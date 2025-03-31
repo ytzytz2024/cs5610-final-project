@@ -1,17 +1,25 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { RecipeService } from "../services/api";
 import "./AddRecipe.css";
 
-const AddRecipe = ({ isLoggedIn }) => {
+const AddRecipe = ({ isLoggedIn, isEditing }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   // Redirect to login if not authenticated
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isLoggedIn) {
-      navigate("/login", { state: { from: "/build" } });
+      navigate("/login", {
+        state: { from: isEditing ? `/recipe/edit/${id}` : "/build" },
+      });
     }
-  }, [isLoggedIn, navigate]);
+
+    // If editing, fetch the recipe data
+    if (isEditing && id) {
+      fetchRecipeData();
+    }
+  }, [isLoggedIn, navigate, isEditing, id]);
 
   const [recipeData, setRecipeData] = useState({
     recipeName: "",
@@ -26,6 +34,52 @@ const AddRecipe = ({ isLoggedIn }) => {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isLoadingRecipe, setIsLoadingRecipe] = useState(isEditing);
+
+  // Fetch recipe data if editing
+  const fetchRecipeData = async () => {
+    try {
+      setIsLoadingRecipe(true);
+      const response = await RecipeService.getRecipeById(id);
+      const recipe = response.data;
+
+      // Check if user is the creator of the recipe
+      const userId = localStorage.getItem("userId");
+      if (recipe.userId !== userId) {
+        alert("You don't have permission to edit this recipe.");
+        navigate(`/recipe/${id}`);
+        return;
+      }
+
+      // Format instructions as array for form
+      const instructionsArray = recipe.instructions
+        .split("\n")
+        .map((step) => step.trim())
+        .filter((step) => step);
+
+      // Set recipe data in form
+      setRecipeData({
+        recipeName: recipe.recipeName,
+        description: recipe.description,
+        cookingTime: recipe.cookingTime,
+        calories: recipe.calories,
+        ingredients: recipe.ingredients,
+        instructions: instructionsArray,
+        image: null, // Original image will be kept if no new one is uploaded
+      });
+
+      // If there's an image, set the preview
+      if (recipe.image) {
+        setImagePreview(recipe.image);
+      }
+
+      setIsLoadingRecipe(false);
+    } catch (err) {
+      console.error("Error fetching recipe data:", err);
+      alert("Failed to load recipe data for editing.");
+      navigate(`/recipe/${id}`);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -157,12 +211,12 @@ const AddRecipe = ({ isLoggedIn }) => {
     setLoading(true);
 
     try {
-      // Prepare data for submission
+      // Prepare form data for submission
       const formData = new FormData();
       formData.append("recipeName", recipeData.recipeName);
       formData.append("description", recipeData.description);
       formData.append("cookingTime", recipeData.cookingTime);
-      formData.append("calories", recipeData.calories);
+      formData.append("calories", recipeData.calories || 0);
       formData.append("ingredients", JSON.stringify(recipeData.ingredients));
       formData.append("instructions", recipeData.instructions.join("\n"));
 
@@ -170,24 +224,27 @@ const AddRecipe = ({ isLoggedIn }) => {
         formData.append("image", recipeData.image);
       }
 
-      // For iteration 1, we'll simulate a successful response
-      // In future iterations, this would be:
-      // const response = await axios.post('/api/recipes', formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data'
-      //   }
-      // });
+      let response;
+      if (isEditing) {
+        response = await RecipeService.updateRecipe(id, formData);
+      } else {
+        response = await RecipeService.createRecipe(formData);
+      }
 
-      // Simulate API delay
-      setTimeout(() => {
-        setLoading(false);
-        alert("Recipe created successfully!");
-        navigate("/profile"); // Navigate to profile or recipe detail
-      }, 1500);
+      setLoading(false);
+
+      const successMessage = isEditing
+        ? "Recipe updated successfully!"
+        : "Recipe created successfully!";
+
+      alert(successMessage);
+
+      // Navigate to recipe detail page
+      navigate(`/recipe/${isEditing ? id : response.data._id}`);
     } catch (err) {
       setLoading(false);
-      console.error("Error creating recipe:", err);
-      alert("Failed to create recipe. Please try again.");
+      console.error("Error saving recipe:", err);
+      alert("Failed to save recipe. Please try again.");
     }
   };
 
@@ -195,9 +252,22 @@ const AddRecipe = ({ isLoggedIn }) => {
     return null; // Return null for initial render before redirect
   }
 
+  if (isLoadingRecipe) {
+    return (
+      <div className="text-center my-5">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Loading recipe data...</span>
+        </div>
+        <p className="mt-2">Loading recipe data...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="add-recipe-container">
-      <h1 className="page-title">Create Your Recipe</h1>
+      <h1 className="page-title">
+        {isEditing ? "Edit Recipe" : "Create Your Recipe"}
+      </h1>
 
       {Object.keys(errors).length > 0 && (
         <div className="alert alert-danger">
@@ -273,7 +343,10 @@ const AddRecipe = ({ isLoggedIn }) => {
 
         <div className="mb-4">
           <label htmlFor="recipeImage" className="form-label">
-            Recipe Cover
+            Recipe Cover{" "}
+            {isEditing &&
+              !recipeData.image &&
+              "(Leave empty to keep current image)"}
           </label>
           <div className="custom-file-upload">
             {imagePreview ? (
@@ -414,8 +487,10 @@ const AddRecipe = ({ isLoggedIn }) => {
                   role="status"
                   aria-hidden="true"
                 ></span>
-                Creating Recipe...
+                {isEditing ? "Updating Recipe..." : "Creating Recipe..."}
               </>
+            ) : isEditing ? (
+              "Update Recipe"
             ) : (
               "Publish Recipe"
             )}
