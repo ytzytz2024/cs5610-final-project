@@ -32,6 +32,52 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
+  const [isLoadingRecipe, setIsLoadingRecipe] = useState(isEditing);
+
+  // Fetch recipe data if editing
+  const fetchRecipeData = async () => {
+    try {
+      setIsLoadingRecipe(true);
+      const response = await RecipeService.getRecipeById(id);
+      const recipe = response.data;
+      
+      // Check if user is the creator of the recipe
+      const userId = localStorage.getItem("userId");
+      if (recipe.userId !== userId) {
+        alert("You don't have permission to edit this recipe.");
+        navigate(`/recipe/${id}`);
+        return;
+      }
+
+      // Format instructions as array for form
+      const instructionsArray = recipe.instructions
+        .split("\n")
+        .map(step => step.trim())
+        .filter(step => step);
+
+      // Set recipe data in form
+      setRecipeData({
+        recipeName: recipe.recipeName,
+        description: recipe.description,
+        cookingTime: recipe.cookingTime,
+        calories: recipe.calories,
+        ingredients: recipe.ingredients,
+        instructions: instructionsArray,
+        image: null, // Original image will be kept if no new one is uploaded
+      });
+
+      // If there's an image, set the preview
+      if (recipe.image) {
+        setImagePreview(recipe.image);
+      }
+
+      setIsLoadingRecipe(false);
+    } catch (err) {
+      console.error("Error fetching recipe data:", err);
+      alert("Failed to load recipe data for editing.");
+      navigate(`/recipe/${id}`);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
