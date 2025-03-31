@@ -114,6 +114,29 @@ const RecipeDetail = ({ isLoggedIn }) => {
     }
   };
 
+  // Handle review deletion
+  const handleDeleteReview = async (reviewId) => {
+    if (!isLoggedIn) {
+      navigate("/login", { state: { from: `/recipe/${id}` } });
+      return;
+    }
+
+    if (window.confirm("Are you sure you want to delete this review?")) {
+      try {
+        setDeletingReviewId(reviewId);
+        await ReviewService.deleteReview(reviewId);
+        
+        // Remove the deleted review from the state
+        setReviews(reviews.filter(review => review._id !== reviewId));
+        setDeletingReviewId(null);
+      } catch (err) {
+        console.error("Error deleting review:", err);
+        alert("Failed to delete review. Please try again.");
+        setDeletingReviewId(null);
+      }
+    }
+  };
+
 
 
 
