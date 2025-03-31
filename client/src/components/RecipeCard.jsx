@@ -1,10 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { UserService } from '../services/api';
 import './RecipeCard.css';
 
-const RecipeCard = ({ recipe, showSaveButton = true }) => {
+const RecipeCard = ({ recipe, showSaveButton = true, onUnsave = null }) => {
+  const navigate = useNavigate();
   const { _id, recipeName, description, cookingTime, calories, userId } = recipe;
+  
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   
   // Image fallback handler
   const handleImageError = (e) => {
@@ -12,7 +17,41 @@ const RecipeCard = ({ recipe, showSaveButton = true }) => {
   };
 
   // Check if current user is the creator of this recipe
-  const isCreator = localStorage.getItem('userId') === userId;
+  const currentUserId = localStorage.getItem('userId');
+  const isCreator = currentUserId === userId;
+
+  // Handle save recipe
+  const handleSaveRecipe = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Check if user is logged in
+    if (!currentUserId) {
+      navigate('/login', { state: { from: `/recipe/${_id}` } });
+      return;
+    }
+    
+    try {
+      setIsSaving(true);
+      await UserService.saveRecipe(_id);
+      setIsSaved(true);
+      setIsSaving(false);
+    } catch (err) {
+      console.error('Error saving recipe:', err);
+      setIsSaving(false);
+      alert('Failed to save recipe. Please try again.');
+    }
+  };
+
+  // Handle unsave recipe
+  const handleUnsaveRecipe = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (onUnsave) {
+      onUnsave(_id);
+    }
+  };
 
   return (
     <div className="recipe-card-wrapper">
