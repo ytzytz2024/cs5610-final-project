@@ -1,6 +1,7 @@
+// client/src/pages/Login.jsx (Modified version)
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { UserService } from '../services/api';
 import './Auth.css';
 
 const Login = ({ setIsLoggedIn }) => {
@@ -58,22 +59,14 @@ const Login = ({ setIsLoggedIn }) => {
     setLoading(true);
     
     try {
-      // For iteration 1, we'll simulate a successful login
-      // In future iterations, this would be an actual API call:
-      // const response = await axios.post('/api/users/login', formData);
-      // localStorage.setItem('token', response.data.token);
-      // localStorage.setItem('userId', response.data.userId);
+      const response = await UserService.login(formData);
       
-      // Simulate API delay
-      setTimeout(() => {
-        // Mock successful login
-        localStorage.setItem('token', 'mock-jwt-token');
-        localStorage.setItem('userId', '123'); // mock user ID
-        
-        setIsLoggedIn(true);
-        setLoading(false);
-        navigate(from, { replace: true });
-      }, 1000);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userId', response.data.userId);
+      
+      setIsLoggedIn(true);
+      setLoading(false);
+      navigate(from, { replace: true });
     } catch (err) {
       setLoading(false);
       
