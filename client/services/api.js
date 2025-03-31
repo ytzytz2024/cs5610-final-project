@@ -1,4 +1,3 @@
-// client/src/services/api.js
 import axios from "axios";
 
 // Create an axios instance with the base URL
