@@ -47,6 +47,17 @@ const Profile = ({ isLoggedIn }) => {
     }
   };
   
+  const handleUnsaveRecipe = async (recipeId) => {
+    try {
+      await UserService.unsaveRecipe(recipeId);
+      // Remove the unsaved recipe from the saved recipes list
+      setSavedRecipes(savedRecipes.filter(recipe => recipe._id !== recipeId));
+    } catch (err) {
+      console.error('Error unsaving recipe:', err);
+      alert('Failed to unsave recipe. Please try again.');
+    }
+  };
+  
   if (!isLoggedIn) {
     return null; // Return null for initial render before redirect
   }
@@ -142,7 +153,11 @@ const Profile = ({ isLoggedIn }) => {
                         <div className="col-md-4 mb-4" 
                         key={recipe._id}
                         >
-                          <RecipeCard recipe={recipe} />
+                          <RecipeCard 
+                            recipe={recipe} 
+                            showSaveButton={false}
+                            onUnsave={handleUnsaveRecipe}
+                          />
                         </div>
                       ))}
                     </div>
