@@ -1,4 +1,3 @@
-// client/src/pages/Login.jsx (Modified version)
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserService } from '../services/api';
