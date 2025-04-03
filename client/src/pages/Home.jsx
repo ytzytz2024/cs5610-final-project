@@ -109,6 +109,11 @@ export default function Home({ isLoggedIn }) {
     navigate(`/search?ingredients=${ingredients.join(",")}`);
   };
 
+  const handleRestaurantDetails = (restaurantUrl) => {
+    // Open the restaurant's Yelp page in a new tab
+    window.open(restaurantUrl, '_blank');
+  };
+
   return (
     <div className="home-container">
       <section className="kitchen-section">
@@ -169,10 +174,16 @@ export default function Home({ isLoggedIn }) {
             If you don't want to cook today
           </h2>
           <div className="carousel-controls">
-            <button className="btn btn-sm btn-outline-secondary me-2">
-              &lt;
+          <button 
+              className="more-options-btn" 
+              onClick={handleRefresh}
+              disabled={isLoadingRestaurants}
+            >
+              {isLoadingRestaurants ? 
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : 
+                "More Options"
+              }
             </button>
-            <button className="btn btn-sm btn-outline-secondary">&gt;</button>
           </div>
         </div>
 
