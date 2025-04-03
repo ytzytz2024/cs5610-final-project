@@ -1,42 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { RestaurantService } from "../services/api";
 import "./Home.css";
 
 export default function Home({ isLoggedIn }) {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [restaurants, setRestaurants] = useState([
-    {
-      id: 1,
-      name: "The Rustic Table",
-      image: "/images/placeholder.png",
-      priceRange: "$$",
-      timeRange: "15-20 min",
-    },
-    {
-      id: 2,
-      name: "Fusion Kitchen",
-      image: "/images/placeholder.png",
-      priceRange: "$$$",
-      timeRange: "20-25 min",
-    },
-    {
-      id: 3,
-      name: "Bistro Corner",
-      image: "/images/placeholder.png",
-      priceRange: "$$",
-      timeRange: "10-15 min",
-    },
-    {
-      id: 4,
-      name: "Asian Fusion",
-      image: "/images/placeholder.png",
-      priceRange: "$$$",
-      timeRange: "25-30 min",
-    },
-  ]);
+  const [restaurants, setRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [coords, setCoords] = useState(null);
+  const [offset, setOffset] = useState(0);
+
+  // Fetch restaurants using geolocation on component mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCoords({ latitude, longitude });
+          fetchRestaurantsByCoordinates(latitude, longitude, 0);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          // Fallback to Vancouver if geolocation fails
+          setCurrentLocation("Vancouver, BC");
+          fetchRestaurants("Vancouver, BC", 0);
+        }
+      );
+    } else {
+      // Geolocation not supported, use Vancouver as fallback
+      setCurrentLocation("Vancouver, BC");
+      fetchRestaurants("Vancouver, BC", 0);
+    }
+  }, []);
+
+  const fetchRestaurantsByCoordinates = async (latitude, longitude, currentOffset = offset) => {
+    try {
+      setIsLoadingRestaurants(true);
+      const response = await RestaurantService.getNearbyRestaurants({ 
+        latitude,
+        longitude,
+        limit: 4,
+        offset: currentOffset
+      });
+      setRestaurants(response.data);
+      setOffset(currentOffset + 4); // Increment offset for next refresh
+      setIsLoadingRestaurants(false);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+      setIsLoadingRestaurants(false);
+    }
+  };
+
+  const fetchRestaurants = async (location = "Vancouver, BC", currentOffset = offset) => {
+    try {
+      setIsLoadingRestaurants(true);
+      const response = await RestaurantService.getNearbyRestaurants({ 
+        location,
+        limit: 4,
+        offset: currentOffset
+      });
+      setRestaurants(response.data);
+      setOffset(currentOffset + 4); // Increment offset for next refresh
+      setIsLoadingRestaurants(false);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+      setIsLoadingRestaurants(false);
+    }
+  };
+
+  // Handle refresh button click
+  const handleRefresh = () => {
+    if (coords) {
+      fetchRestaurantsByCoordinates(coords.latitude, coords.longitude);
+    } else if (currentLocation) {
+      fetchRestaurants(currentLocation);
+    } else {
+      // Fallback if no location is set
+      fetchRestaurants("Vancouver, BC");
+    }
+  };
 
   const handleAddIngredient = () => {
     if (inputValue.trim() && !ingredients.includes(inputValue.trim())) {
@@ -62,6 +108,11 @@ export default function Home({ isLoggedIn }) {
 
     // Navigate to search page with ingredients as query parameters
     navigate(`/search?ingredients=${ingredients.join(",")}`);
+  };
+
+  const handleRestaurantDetails = (restaurantUrl) => {
+    // Open the restaurant's Yelp page in a new tab
+    window.open(restaurantUrl, '_blank');
   };
 
   return (
@@ -124,39 +175,57 @@ export default function Home({ isLoggedIn }) {
             If you don't want to cook today
           </h2>
           <div className="carousel-controls">
-            <button className="btn btn-sm btn-outline-secondary me-2">
-              &lt;
+            <button 
+              className="more-options-btn" 
+              onClick={handleRefresh}
+              disabled={isLoadingRestaurants}
+            >
+              {isLoadingRestaurants ? 
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : 
+                "More Options"
+              }
             </button>
-            <button className="btn btn-sm btn-outline-secondary">&gt;</button>
           </div>
         </div>
 
-        <div className="row">
-          {restaurants.map((restaurant) => (
-            <div className="col-md-3 mb-4" key={restaurant.id}>
-              <div className="card restaurant-card">
-                <img
-                  src={restaurant.image}
-                  className="card-img-top"
-                  alt={restaurant.name}
-                  onError={(e) => {
-                    e.target.src = "/images/placeholder.png";
-                  }}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{restaurant.name}</h5>
-                  <div className="restaurant-meta">
-                    <span>{restaurant.timeRange}</span>
-                    <span>{restaurant.priceRange}</span>
+        {isLoadingRestaurants ? (
+          <div className="text-center py-5">
+            <div className="spinner-border text-success" role="status">
+              <span className="visually-hidden">Loading restaurants...</span>
+            </div>
+            <p className="mt-2">Finding restaurants near you...</p>
+          </div>
+        ) : (
+          <div className="row">
+            {restaurants.map((restaurant) => (
+              <div className="col-md-3 mb-4" key={restaurant.id}>
+                <div className="card restaurant-card">
+                  <img
+                    src={restaurant.image}
+                    className="card-img-top"
+                    alt={restaurant.name}
+                    onError={(e) => {
+                      e.target.src = "/images/placeholder.png";
+                    }}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{restaurant.name}</h5>
+                    <div className="restaurant-meta">
+                      <span>{restaurant.distance} min</span>
+                      <span>{restaurant.price}</span>
+                    </div>
+                    <button 
+                      className="btn btn-success w-100 mt-2"
+                      onClick={() => handleRestaurantDetails(restaurant.url)}
+                    >
+                      Details
+                    </button>
                   </div>
-                  <button className="btn btn-success w-100 mt-2">
-                    Details
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
