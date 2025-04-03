@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { RestaurantService } from "../services/api";
 import "./Home.css";
 
 export default function Home({ isLoggedIn }) {
@@ -174,7 +175,7 @@ export default function Home({ isLoggedIn }) {
             If you don't want to cook today
           </h2>
           <div className="carousel-controls">
-          <button 
+            <button 
               className="more-options-btn" 
               onClick={handleRefresh}
               disabled={isLoadingRestaurants}
