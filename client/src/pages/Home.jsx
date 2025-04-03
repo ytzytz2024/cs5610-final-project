@@ -36,7 +36,23 @@ export default function Home({ isLoggedIn }) {
     }
   }, []);
 
-  
+  const fetchRestaurantsByCoordinates = async (latitude, longitude, currentOffset = offset) => {
+    try {
+      setIsLoadingRestaurants(true);
+      const response = await RestaurantService.getNearbyRestaurants({ 
+        latitude,
+        longitude,
+        limit: 4,
+        offset: currentOffset
+      });
+      setRestaurants(response.data);
+      setOffset(currentOffset + 4); // Increment offset for next refresh
+      setIsLoadingRestaurants(false);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+      setIsLoadingRestaurants(false);
+    }
+  };
 
   const handleAddIngredient = () => {
     if (inputValue.trim() && !ingredients.includes(inputValue.trim())) {
