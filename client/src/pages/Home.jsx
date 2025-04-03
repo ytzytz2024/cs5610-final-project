@@ -54,6 +54,35 @@ export default function Home({ isLoggedIn }) {
     }
   };
 
+  const fetchRestaurants = async (location = "Vancouver, BC", currentOffset = offset) => {
+    try {
+      setIsLoadingRestaurants(true);
+      const response = await RestaurantService.getNearbyRestaurants({ 
+        location,
+        limit: 4,
+        offset: currentOffset
+      });
+      setRestaurants(response.data);
+      setOffset(currentOffset + 4); // Increment offset for next refresh
+      setIsLoadingRestaurants(false);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+      setIsLoadingRestaurants(false);
+    }
+  };
+
+  // Handle refresh button click
+  const handleRefresh = () => {
+    if (coords) {
+      fetchRestaurantsByCoordinates(coords.latitude, coords.longitude);
+    } else if (currentLocation) {
+      fetchRestaurants(currentLocation);
+    } else {
+      // Fallback if no location is set
+      fetchRestaurants("Vancouver, BC");
+    }
+  };
+
   const handleAddIngredient = () => {
     if (inputValue.trim() && !ingredients.includes(inputValue.trim())) {
       setIngredients([...ingredients, inputValue.trim()]);
