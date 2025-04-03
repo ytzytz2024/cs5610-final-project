@@ -8,6 +8,35 @@ export default function Home({ isLoggedIn }) {
   const [inputValue, setInputValue] = useState("");
   const [restaurants, setRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [coords, setCoords] = useState(null);
+  const [offset, setOffset] = useState(0);
+
+  // Fetch restaurants using geolocation on component mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCoords({ latitude, longitude });
+          fetchRestaurantsByCoordinates(latitude, longitude, 0);
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+          // Fallback to Vancouver if geolocation fails
+          setCurrentLocation("Vancouver, BC");
+          fetchRestaurants("Vancouver, BC", 0);
+        }
+      );
+    } else {
+      // Geolocation not supported, use Vancouver as fallback
+      setCurrentLocation("Vancouver, BC");
+      fetchRestaurants("Vancouver, BC", 0);
+    }
+  }, []);
+
+  
 
   const handleAddIngredient = () => {
     if (inputValue.trim() && !ingredients.includes(inputValue.trim())) {
