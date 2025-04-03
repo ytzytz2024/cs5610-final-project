@@ -6,36 +6,7 @@ export default function Home({ isLoggedIn }) {
   const navigate = useNavigate();
   const [ingredients, setIngredients] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [restaurants, setRestaurants] = useState([
-    {
-      id: 1,
-      name: "The Rustic Table",
-      image: "/images/placeholder.png",
-      priceRange: "$$",
-      timeRange: "15-20 min",
-    },
-    {
-      id: 2,
-      name: "Fusion Kitchen",
-      image: "/images/placeholder.png",
-      priceRange: "$$$",
-      timeRange: "20-25 min",
-    },
-    {
-      id: 3,
-      name: "Bistro Corner",
-      image: "/images/placeholder.png",
-      priceRange: "$$",
-      timeRange: "10-15 min",
-    },
-    {
-      id: 4,
-      name: "Asian Fusion",
-      image: "/images/placeholder.png",
-      priceRange: "$$$",
-      timeRange: "25-30 min",
-    },
-  ]);
+  const [restaurants, setRestaurants] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddIngredient = () => {
