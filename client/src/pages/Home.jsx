@@ -187,32 +187,44 @@ export default function Home({ isLoggedIn }) {
           </div>
         </div>
 
-        <div className="row">
-          {restaurants.map((restaurant) => (
-            <div className="col-md-3 mb-4" key={restaurant.id}>
-              <div className="card restaurant-card">
-                <img
-                  src={restaurant.image}
-                  className="card-img-top"
-                  alt={restaurant.name}
-                  onError={(e) => {
-                    e.target.src = "/images/placeholder.png";
-                  }}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{restaurant.name}</h5>
-                  <div className="restaurant-meta">
-                    <span>{restaurant.timeRange}</span>
-                    <span>{restaurant.priceRange}</span>
+        {isLoadingRestaurants ? (
+          <div className="text-center py-5">
+            <div className="spinner-border text-success" role="status">
+              <span className="visually-hidden">Loading restaurants...</span>
+            </div>
+            <p className="mt-2">Finding restaurants near you...</p>
+          </div>
+        ) : (
+          <div className="row">
+            {restaurants.map((restaurant) => (
+              <div className="col-md-3 mb-4" key={restaurant.id}>
+                <div className="card restaurant-card">
+                  <img
+                    src={restaurant.image}
+                    className="card-img-top"
+                    alt={restaurant.name}
+                    onError={(e) => {
+                      e.target.src = "/images/placeholder.png";
+                    }}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{restaurant.name}</h5>
+                    <div className="restaurant-meta">
+                      <span>{restaurant.distance} min</span>
+                      <span>{restaurant.price}</span>
+                    </div>
+                    <button 
+                      className="btn btn-success w-100 mt-2"
+                      onClick={() => handleRestaurantDetails(restaurant.url)}
+                    >
+                      Details
+                    </button>
                   </div>
-                  <button className="btn btn-success w-100 mt-2">
-                    Details
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
