@@ -25,7 +25,7 @@ const yelpService = {
         limit = 4, 
         offset = 0,
         term = 'restaurants',
-        radius = 10000,
+        radius = 3000,
         categories = 'restaurants'
       } = options;
       
