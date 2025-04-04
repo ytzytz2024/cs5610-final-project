@@ -1,15 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./NavBar.css";
 
-export default function NavBar({ isLoggedIn, setIsLoggedIn }) {
-  const handleLogout = () => {
-    // Clear any authentication tokens
-    localStorage.removeItem("token");
-    // Update auth state
-    setIsLoggedIn(false);
-  };
+export default function NavBar() {
+  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light">
@@ -42,22 +38,26 @@ export default function NavBar({ isLoggedIn, setIsLoggedIn }) {
               <Link className="nav-link" to="/search">Search</Link>
             </li>
             <li className="nav-item">
-              {isLoggedIn ? (
+              {isAuthenticated ? (
                 <div className="d-flex align-items-center">
                   <Link className="nav-link" to="/profile">
                     <span className="user-icon">👤</span>
+                    {user?.name}
                   </Link>
                   <button 
                     className="btn btn-link nav-link" 
-                    onClick={handleLogout}
+                    onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
                   >
                     Logout
                   </button>
                 </div>
               ) : (
-                <Link className="nav-link" to="/login">
-                  <span className="user-icon">👤</span>
-                </Link>
+                <button 
+                  className="btn btn-link nav-link" 
+                  onClick={() => loginWithRedirect()}
+                >
+                  <span className="user-icon">👤</span> Login
+                </button>
               )}
             </li>
           </ul>
@@ -65,4 +65,4 @@ export default function NavBar({ isLoggedIn, setIsLoggedIn }) {
       </div>
     </nav>
   );
-};
+}

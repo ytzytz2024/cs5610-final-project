@@ -1,5 +1,6 @@
 const Recipe = require("../models/Recipe");
 const path = require("path");
+const User = require("../models/User");
 
 // Get all recipes
 exports.getAllRecipes = async (req, res) => {
@@ -45,7 +46,7 @@ exports.createRecipe = async (req, res) => {
       instructions,
     } = req.body;
 
-    // Create new recipe object
+    // Create new recipe object using the MongoDB user ID (from our middleware)
     const newRecipe = new Recipe({
       recipeName,
       description,
@@ -53,7 +54,7 @@ exports.createRecipe = async (req, res) => {
       calories,
       ingredients: JSON.parse(ingredients),
       instructions,
-      userId: req.user.id,
+      userId: req.user._id, // Using MongoDB user ID from auth middleware
       image: req.file ? `/uploads/recipes/${req.file.filename}` : null,
     });
 
@@ -74,8 +75,8 @@ exports.updateRecipe = async (req, res) => {
       return res.status(404).json({ msg: "Recipe not found" });
     }
 
-    // Check user owns the recipe
-    if (recipe.userId.toString() !== req.user.id) {
+    // Check if user owns the recipe
+    if (recipe.userId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
@@ -126,8 +127,8 @@ exports.deleteRecipe = async (req, res) => {
       return res.status(404).json({ msg: "Recipe not found" });
     }
 
-    // Check user owns the recipe
-    if (recipe.userId.toString() !== req.user.id) {
+    // Check if user owns the recipe
+    if (recipe.userId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
@@ -147,12 +148,29 @@ exports.deleteRecipe = async (req, res) => {
 // Get recipes by user ID
 exports.getRecipesByUser = async (req, res) => {
   try {
-    const recipes = await Recipe.find({ userId: req.params.userId }).sort({
+    // Get Auth0 user ID from header
+    const auth0UserId = req.headers['x-auth0-user-id'];
+    
+    if (!auth0UserId) {
+      return res.status(400).json({ msg: "User ID is required" });
+    }
+    
+    // Find the MongoDB user by Auth0 ID
+    const user = await User.findOne({ auth0Id: auth0UserId });
+    
+    if (!user) {
+      // If user doesn't exist in our DB yet, return empty array
+      return res.json([]);
+    }
+    
+    // Find recipes created by this user
+    const recipes = await Recipe.find({ userId: user._id }).sort({
       createdAt: -1,
     });
+    
     res.json(recipes);
   } catch (err) {
-    console.error(err.message);
+    console.error("Error fetching user recipes:", err.message);
     res.status(500).send("Server Error");
   }
 };

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const recipeController = require("../controllers/recipeController");
-const auth = require("../middleware/auth");
+const auth0User = require("../middleware/auth0User");
 const multer = require("multer");
 const path = require("path");
 
@@ -35,13 +35,15 @@ const upload = multer({
   fileFilter: fileFilter,
 });
 
-// Recipe routes
+// Public routes
 router.get("/", recipeController.getAllRecipes);
 router.get("/search", recipeController.searchRecipes);
-router.get("/user/:userId", recipeController.getRecipesByUser);
+router.get("/user/:userId?", recipeController.getRecipesByUser);
 router.get("/:id", recipeController.getRecipeById);
-router.post("/", auth, upload.single("image"), recipeController.createRecipe);
-router.put("/:id", auth, upload.single("image"), recipeController.updateRecipe);
-router.delete("/:id", auth, recipeController.deleteRecipe);
+
+// Protected routes - use our custom Auth0 user middleware
+router.post("/", auth0User, upload.single("image"), recipeController.createRecipe);
+router.put("/:id", auth0User, upload.single("image"), recipeController.updateRecipe);
+router.delete("/:id", auth0User, recipeController.deleteRecipe);
 
 module.exports = router;

@@ -1,122 +1,11 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Recipe = require('../models/Recipe');
-
-// Register user
-exports.registerUser = async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-    
-    // Check if user exists
-    let user = await User.findOne({ email });
-    
-    if (user) {
-      return res.status(400).json({ message: 'User already exists with this email' });
-    }
-    
-    // Check if username is taken
-    user = await User.findOne({ username });
-    
-    if (user) {
-      return res.status(400).json({ message: 'Username is already taken' });
-    }
-    
-    // Create new user
-    user = new User({
-      username,
-      email,
-      password
-    });
-    
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
-    
-    // Save user to database
-    await user.save();
-    
-    // Create and return JWT token
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-    
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '5d' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ 
-          token,
-          userId: user.id,
-          username: user.username
-        });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-};
-
-// Login user
-exports.loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    
-    // Check if user exists
-    const user = await User.findOne({ email });
-    
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-    
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
-    }
-    
-    // Create and return JWT token
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-    
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '5d' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ 
-          token,
-          userId: user.id,
-          username: user.username
-        });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-};
 
 // Get current user profile
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
-    
-    if (!user) {
-      return res.status(404).json({ msg: 'User not found' });
-    }
-    
-    res.json(user);
+    // User is already loaded in the middleware and attached to req
+    res.json(req.user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -135,7 +24,7 @@ exports.updateUserProfile = async (req, res) => {
     
     // Update user profile
     const user = await User.findByIdAndUpdate(
-      req.user.id,
+      req.user._id,
       { $set: profileFields },
       { new: true }
     ).select('-password');
@@ -160,17 +49,15 @@ exports.saveRecipe = async (req, res) => {
     }
     
     // Check if recipe is already saved
-    const user = await User.findById(req.user.id);
-    
-    if (user.savedRecipes.includes(recipeId)) {
+    if (req.user.savedRecipes.includes(recipeId)) {
       return res.status(400).json({ msg: 'Recipe already saved' });
     }
     
     // Add recipe to saved recipes
-    user.savedRecipes.push(recipeId);
-    await user.save();
+    req.user.savedRecipes.push(recipeId);
+    await req.user.save();
     
-    res.json(user.savedRecipes);
+    res.json(req.user.savedRecipes);
   } catch (err) {
     console.error(err.message);
     
@@ -185,16 +72,14 @@ exports.saveRecipe = async (req, res) => {
 // Unsave a recipe
 exports.unsaveRecipe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    
     // Remove recipe from saved recipes
-    user.savedRecipes = user.savedRecipes.filter(
+    req.user.savedRecipes = req.user.savedRecipes.filter(
       id => id.toString() !== req.params.id
     );
     
-    await user.save();
+    await req.user.save();
     
-    res.json(user.savedRecipes);
+    res.json(req.user.savedRecipes);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -204,10 +89,8 @@ exports.unsaveRecipe = async (req, res) => {
 // Get saved recipes
 exports.getSavedRecipes = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
-    
     const savedRecipes = await Recipe.find({
-      _id: { $in: user.savedRecipes }
+      _id: { $in: req.user.savedRecipes }
     });
     
     res.json(savedRecipes);

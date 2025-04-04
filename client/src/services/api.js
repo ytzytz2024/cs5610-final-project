@@ -5,12 +5,14 @@ const API = axios.create({
   baseURL: "http://localhost:5001/api",
 });
 
-// Add a request interceptor to include the authentication token in the headers
-API.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Add a request interceptor to include the user info in the headers
+API.interceptors.request.use(async (config) => {
+  // Get the Auth0 user ID from localStorage
+  const auth0UserId = localStorage.getItem('auth0UserId');
+  if (auth0UserId) {
+    config.headers['X-Auth0-User-ID'] = auth0UserId;
   }
+  
   return config;
 });
 
@@ -22,7 +24,7 @@ export const RecipeService = {
   createRecipe: (formData) => API.post("/recipes", formData),
   updateRecipe: (id, formData) => API.put(`/recipes/${id}`, formData),
   deleteRecipe: (id) => API.delete(`/recipes/${id}`),
-  getRecipesByUser: (userId) => API.get(`/recipes/user/${userId}`),
+  getRecipesByUser: () => API.get(`/recipes/user`),
 };
 
 // API services for users

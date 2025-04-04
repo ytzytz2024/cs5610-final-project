@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserService } from './services/api';
+import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
+import { useAuth0UserStorage } from './hooks/useAuth0UserStorage';
+import ProtectedRoute from './auth/protected-route';
+import { useAuth0 } from "@auth0/auth0-react";
 
-// Components
+// Import your components here
 import NavBar from './components/NavBar';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import RecipeDetail from './pages/RecipeDetail';
 import AddRecipe from './pages/AddRecipe';
-import Login from './pages/Login';
-import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NotFound from './pages/NotFound';
 
@@ -20,37 +21,12 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 // App-wide styles
 import './App.css';
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+function AppContent() {
+  // Use the hook to store Auth0 user info in localStorage
+  useAuth0UserStorage();
+  const { isAuthenticated, isLoading } = useAuth0();
   
-  // Check if user is logged in on app load
-  useEffect(() => {
-    const verifyToken = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          // Verify the token with the backend
-          await UserService.getProfile();
-          setIsLoggedIn(true);
-        } catch (error) {
-          // Token invalid, clear localStorage
-          localStorage.removeItem('token');
-          localStorage.removeItem('userId');
-          console.error('Authentication error:', error);
-        } finally {
-          setIsCheckingAuth(false);
-        }
-      } else {
-        setIsCheckingAuth(false);
-      }
-    };
-    
-    verifyToken();
-  }, []);
-  
-  if (isCheckingAuth) {
-    // Show loading indicator while checking authentication
+  if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="spinner-border text-success" role="status">
@@ -61,30 +37,48 @@ function App() {
   }
   
   return (
+    <div className="app-container">
+      <NavBar />
+      
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/recipe/:id" element={<RecipeDetail />} />
+          <Route path="/build" element={
+            <ProtectedRoute>
+              <AddRecipe />
+            </ProtectedRoute>
+          } />
+          <Route path="/recipe/edit/:id" element={
+            <ProtectedRoute>
+              <AddRecipe isEditing={true} />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      
+      <footer className="app-footer">
+        <div className="container">
+          <p>&copy; {new Date().getFullYear()} SmartRecipe - Created by Tianze Yin & Xinghang Tong</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function App() {
+  return (
     <Router>
-      <div className="app-container">
-        <NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-        
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home isLoggedIn={isLoggedIn} />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/recipe/:id" element={<RecipeDetail isLoggedIn={isLoggedIn} />} />
-            <Route path="/build" element={<AddRecipe isLoggedIn={isLoggedIn} />} />
-            <Route path="/recipe/edit/:id" element={<AddRecipe isLoggedIn={isLoggedIn} isEditing={true} />} />
-            <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-            <Route path="/register" element={<Register setIsLoggedIn={setIsLoggedIn} />} />
-            <Route path="/profile" element={<Profile isLoggedIn={isLoggedIn} />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        
-        <footer className="app-footer">
-          <div className="container">
-            <p>&copy; {new Date().getFullYear()} SmartRecipe - Created by Tianze Yin & Xinghang Tong</p>
-          </div>
-        </footer>
-      </div>
+      <Auth0ProviderWithHistory>
+        <AppContent />
+      </Auth0ProviderWithHistory>
     </Router>
   );
 }
