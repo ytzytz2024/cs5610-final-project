@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Create an axios instance with the base URL
 const API = axios.create({
-  baseURL: "http://localhost:5001/api",
+  // Use relative path for production and localhost for development
+  baseURL: import.meta.env.VITE_API_URL || '/api',
 });
 
 // Add a request interceptor to include the authentication token in the headers
