@@ -44,4 +44,9 @@ export const ReviewService = {
   deleteReview: (id) => API.delete(`/reviews/${id}`),
 };
 
+// API services for restaurants
+export const RestaurantService = {
+  getNearbyRestaurants: (params) => API.get('/restaurants/nearby', { params }),
+};
+
 export default API;

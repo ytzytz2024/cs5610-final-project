@@ -33,11 +33,13 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const recipeRoutes = require('./routes/recipeRoutes');
 const userRoutes = require('./routes/userRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const restaurantRoutes = require('./routes/restaurantRoutes');
 
 // Register all routes
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/restaurants', restaurantRoutes);
 
 // Test route
 app.get('/api', (req, res) => {
