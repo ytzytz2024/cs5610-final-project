@@ -2,7 +2,12 @@
 
 Iteration 2 focuses on implementing backend functionality and connecting the frontend to the API. This update brings the application from a UI prototype to a fully functional web application with real data persistence.
 
-![image](https://github.com/user-attachments/assets/ba384424-178f-4303-8942-edb421f0c92f)
+![image](https://github.com/user-attachments/assets/0cd1359b-5124-4e34-85d9-ac639649a6e4)
+![image](https://github.com/user-attachments/assets/dce995b3-fe97-48d4-9208-dffeac46a65d)
+![image](https://github.com/user-attachments/assets/2a091977-5085-456e-aec9-ff8671a20da2)
+![image](https://github.com/user-attachments/assets/98c8883a-567c-4ece-86e2-4ca08d4ae554)
+![image](https://github.com/user-attachments/assets/62014d99-44d0-4c85-a1ad-a58b1423ab85)
+![image](https://github.com/user-attachments/assets/77495969-e8b1-4796-8881-e0a2ec77a41e)
 
 ## New Implementations in Iteration 2
 
