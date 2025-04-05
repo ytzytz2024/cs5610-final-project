@@ -1,3 +1,71 @@
+# SmartRecipe (Iteration 2)
+
+Iteration 2 focuses on implementing backend functionality and connecting the frontend to the API. This update brings the application from a UI prototype to a fully functional web application with real data persistence.
+
+![image](https://github.com/user-attachments/assets/ba384424-178f-4303-8942-edb421f0c92f)
+
+## New Implementations in Iteration 2
+
+### Backend API Implementation
+- ✅ **Complete CRUD Operations**: Fully implemented controllers for all API routes
+- 🔐 **Authentication System**: JWT-based authentication with secure password hashing
+- 📂 **File Storage**: Image upload functionality for recipe photos
+- 🍽️ **Yelp Integration**: External API integration for restaurant recommendations
+
+### Frontend-Backend Integration
+- 🔄 **API Service Layer**: Created unified API service for consistent data fetching
+- 🔐 **Live Authentication**: Connected login/register flows to backend
+- 📝 **Recipe Management**: Integrated create, update, delete operations with backend
+- 🔍 **Search Functionality**: Connected search interface to real data
+- 👤 **User Profile**: Implemented saved recipes and profile editing capabilities
+
+## Project Enhancements
+- 📱 **Responsive Improvements**: Enhanced mobile experience
+- 🎨 **UI Polishing**: Refined styling and user interaction
+- 🧪 **Data Validation**: Added input validation on forms
+- 🚀 **Performance Optimizations**: Improved data loading and state management
+
+## Team Contributions for Iteration 2
+
+### Xinghang Tong
+- **Backend Implementation:**
+  - Completed recipe and review controllers with full CRUD functionality
+  - Implemented route handlers for recipe and review operations
+  - Created Yelp API service integration
+  - Fixed server configuration and database connection issues
+- **Frontend Integration:**
+  - Created unified API service layer (`/client/src/services/api.js`)
+  - Connected recipe detail page to backend API
+  - Connected recipe creation/editing to backend
+  - Updated RecipeCard component to use real data
+  - Enhanced Home page with Yelp API integration for restaurant recommendations
+  
+### Tianze Yin
+- **Backend Implementation:**
+  - Completed user controller with authentication and profile management
+  - Implemented route handlers for user operations
+  - Contributed to recipe controller implementation
+- **Frontend Integration:**
+  - Connected login and registration pages to authentication API
+  - Connected search page to backend API
+  - Enhanced profile page with edit functionality and API integration
+  - Updated global authentication state in main App component
+
+## Getting Started
+
+The installation and running instructions remain the same as in Iteration 1. Please refer to the Iteration 1 documentation below for setup details.
+
+## Coming in Iteration 3
+
+For the next iteration of SmartRecipe, we plan to implement the following features:
+
+- 🤖 **OpenAI API Integration**: Connect to OpenAI API to generate recipes based on user-provided ingredients
+- 🔑 **Auth0 Authentication**: Migrate from custom JWT authentication to Auth0 platform
+- 🎨 **Enhanced UI/UX**: Further refinement of UI design and CSS styling
+- 📱 **Responsive Polishing**: Final adjustments to ensure optimal experience across all devices
+
+---
+
 # SmartRecipe (Iteration 1)
 
 SmartRecipe is a responsive web application for recipe management built with the MERN stack (MongoDB, Express, React, Node.js). This repository contains the initial implementation (Iteration 1) of the application.
