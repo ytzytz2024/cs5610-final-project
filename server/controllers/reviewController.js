@@ -1,3 +1,5 @@
+// server/controllers/reviewController.js
+
 const Review = require("../models/Review");
 const Recipe = require("../models/Recipe");
 
@@ -15,7 +17,7 @@ exports.createReview = async (req, res) => {
 
     // Create new review
     const newReview = new Review({
-      userId: req.user.id,
+      userId: req.user._id,
       recipeId,
       comment,
     });
@@ -30,7 +32,7 @@ exports.createReview = async (req, res) => {
     // Populate user data for the response
     const populatedReview = await Review.findById(review._id).populate({
       path: "userId",
-      select: "username",
+      select: "username picture",
     });
 
     res.json(populatedReview);
@@ -47,7 +49,7 @@ exports.getReviewsByRecipe = async (req, res) => {
       .sort({ timestamp: -1 })
       .populate({
         path: "userId",
-        select: "username",
+        select: "username picture",
       });
 
     res.json(reviews);
@@ -62,7 +64,7 @@ exports.getReviewById = async (req, res) => {
   try {
     const review = await Review.findById(req.params.id).populate({
       path: "userId",
-      select: "username",
+      select: "username picture",
     });
 
     if (!review) {
@@ -94,7 +96,7 @@ exports.updateReview = async (req, res) => {
     }
 
     // Check user owns the review
-    if (review.userId.toString() !== req.user.id) {
+    if (review.userId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
@@ -107,7 +109,7 @@ exports.updateReview = async (req, res) => {
     // Populate user data for the response
     const updatedReview = await Review.findById(review._id).populate({
       path: "userId",
-      select: "username",
+      select: "username picture",
     });
 
     res.json(updatedReview);
@@ -132,7 +134,7 @@ exports.deleteReview = async (req, res) => {
     }
 
     // Check user owns the review
-    if (review.userId.toString() !== req.user.id) {
+    if (review.userId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
