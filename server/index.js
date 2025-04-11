@@ -1,3 +1,5 @@
+// server/index.js
+
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
@@ -43,7 +45,17 @@ app.use('/api/restaurants', restaurantRoutes);
 
 // Test route
 app.get('/api', (req, res) => {
-  res.json({ message: 'SmartRecipe API is running' });
+  res.json({ message: 'SmartRecipe API is running with Auth0 authentication' });
+});
+
+// Error handling for Auth0 middleware
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+  
+  console.error(err);
+  res.status(500).json({ message: 'Server error' });
 });
 
 // Connect to MongoDB
