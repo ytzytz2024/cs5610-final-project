@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { UserService } from '../services/api';
+import { useAuth } from '../hooks/useAuth';
 import './RecipeCard.css';
 
 const RecipeCard = ({ recipe, showSaveButton = true, onUnsave = null }) => {
   const navigate = useNavigate();
+  const { isAuthenticated, user, getToken, login } = useAuth();
   const { _id, recipeName, description, cookingTime, calories, userId } = recipe;
   
   const [isSaving, setIsSaving] = useState(false);
@@ -17,8 +19,7 @@ const RecipeCard = ({ recipe, showSaveButton = true, onUnsave = null }) => {
   };
 
   // Check if current user is the creator of this recipe
-  const currentUserId = localStorage.getItem('userId');
-  const isCreator = currentUserId === userId;
+  const isCreator = user && user._id === userId;
 
   // Handle save recipe
   const handleSaveRecipe = async (e) => {
@@ -26,14 +27,14 @@ const RecipeCard = ({ recipe, showSaveButton = true, onUnsave = null }) => {
     e.stopPropagation();
     
     // Check if user is logged in
-    if (!currentUserId) {
-      navigate('/login', { state: { from: `/recipe/${_id}` } });
+    if (!isAuthenticated) {
+      login();
       return;
     }
     
     try {
       setIsSaving(true);
-      await UserService.saveRecipe(_id);
+      await UserService.saveRecipe(_id, getToken);
       setIsSaved(true);
       setIsSaving(false);
     } catch (err) {
@@ -74,7 +75,7 @@ const RecipeCard = ({ recipe, showSaveButton = true, onUnsave = null }) => {
               View
             </Link>
             
-            {showSaveButton && !isCreator && (
+            {showSaveButton && !isCreator && isAuthenticated && (
               <button 
                 className="btn btn-light save-btn"
                 onClick={handleSaveRecipe}
