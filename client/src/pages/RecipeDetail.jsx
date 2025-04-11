@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { RecipeService, ReviewService, UserService } from "../services/api";
+import { useAuth } from "../hooks/useAuth";
 import "./RecipeDetail.css";
 
-const RecipeDetail = ({ isLoggedIn }) => {
+const RecipeDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isAuthenticated, user, getToken, login } = useAuth();
+  
   const [recipe, setRecipe] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -16,10 +19,6 @@ const RecipeDetail = ({ isLoggedIn }) => {
   const [savingRecipe, setSavingRecipe] = useState(false);
   const [deletingRecipe, setDeletingRecipe] = useState(false);
   const [deletingReviewId, setDeletingReviewId] = useState(null);
-
-  // Check if current user is creator of recipe
-  const userId = localStorage.getItem("userId");
-  const isCreator = recipe?.userId === userId;
 
   useEffect(() => {
     const fetchRecipeDetails = async () => {
@@ -34,9 +33,9 @@ const RecipeDetail = ({ isLoggedIn }) => {
         setReviews(reviewsResponse.data);
 
         // Check if the recipe is saved by the current user
-        if (isLoggedIn) {
+        if (isAuthenticated && user) {
           try {
-            const savedRecipesResponse = await UserService.getSavedRecipes();
+            const savedRecipesResponse = await UserService.getSavedRecipes(getToken);
             const savedRecipes = savedRecipesResponse.data;
             if (savedRecipes.some((recipe) => recipe._id === id)) {
               setIsSaved(true);
@@ -55,17 +54,17 @@ const RecipeDetail = ({ isLoggedIn }) => {
     };
 
     fetchRecipeDetails();
-  }, [id, isLoggedIn]);
+  }, [id, isAuthenticated, user, getToken]);
 
   const handleSaveRecipe = async () => {
-    if (!isLoggedIn) {
-      navigate("/login", { state: { from: `/recipe/${id}` } });
+    if (!isAuthenticated) {
+      login();
       return;
     }
 
     try {
       setSavingRecipe(true);
-      await UserService.saveRecipe(id);
+      await UserService.saveRecipe(id, getToken);
       setIsSaved(true);
       setSavingRecipe(false);
       alert("Recipe saved successfully!");
@@ -84,7 +83,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
     ) {
       try {
         setDeletingRecipe(true);
-        await RecipeService.deleteRecipe(id);
+        await RecipeService.deleteRecipe(id, getToken);
         setDeletingRecipe(false);
         alert("Recipe deleted successfully!");
         navigate("/profile");
@@ -99,8 +98,8 @@ const RecipeDetail = ({ isLoggedIn }) => {
   const handleSubmitReview = async (e) => {
     e.preventDefault();
 
-    if (!isLoggedIn) {
-      navigate("/login", { state: { from: `/recipe/${id}` } });
+    if (!isAuthenticated) {
+      login();
       return;
     }
 
@@ -113,7 +112,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
       const response = await ReviewService.createReview({
         recipeId: id,
         comment: reviewText,
-      });
+      }, getToken);
 
       // Add the new review to the top of the reviews list
       setReviews([response.data, ...reviews]);
@@ -128,15 +127,15 @@ const RecipeDetail = ({ isLoggedIn }) => {
 
   // Handle review deletion
   const handleDeleteReview = async (reviewId) => {
-    if (!isLoggedIn) {
-      navigate("/login", { state: { from: `/recipe/${id}` } });
+    if (!isAuthenticated) {
+      login();
       return;
     }
 
     if (window.confirm("Are you sure you want to delete this review?")) {
       try {
         setDeletingReviewId(reviewId);
-        await ReviewService.deleteReview(reviewId);
+        await ReviewService.deleteReview(reviewId, getToken);
 
         // Remove the deleted review from the state
         setReviews(reviews.filter((review) => review._id !== reviewId));
@@ -148,6 +147,9 @@ const RecipeDetail = ({ isLoggedIn }) => {
       }
     }
   };
+
+  // Check if current user is creator of recipe
+  const isCreator = user && recipe?.userId === user._id;
 
   if (isLoading) {
     return (
@@ -295,7 +297,7 @@ const RecipeDetail = ({ isLoggedIn }) => {
       <div className="reviews-section mt-5">
         <h2>Reviews</h2>
 
-        {isLoggedIn ? (
+        {isAuthenticated ? (
           <form onSubmit={handleSubmitReview} className="review-form">
             <div className="mb-3">
               <textarea
@@ -329,9 +331,9 @@ const RecipeDetail = ({ isLoggedIn }) => {
           </form>
         ) : (
           <div className="alert alert-info">
-            <Link to="/login" className="alert-link">
+            <button onClick={login} className="alert-link btn btn-link p-0">
               Log in
-            </Link>{" "}
+            </button>{" "}
             to share your review
           </div>
         )}
@@ -345,13 +347,23 @@ const RecipeDetail = ({ isLoggedIn }) => {
             reviews.map((review) => {
               // Check if the current user is the author of the review
               const isReviewAuthor =
-                review.userId?._id === localStorage.getItem("userId");
+                user && review.userId?._id === user._id;
 
               return (
                 <div className="review-item" key={review._id}>
                   <div className="review-header">
                     <div className="reviewer-info">
-                      <span className="user-icon">👤</span>
+                      {review.userId?.picture ? (
+                        <img 
+                          src={review.userId.picture} 
+                          alt={review.userId.username} 
+                          className="rounded-circle me-2" 
+                          width="32" 
+                          height="32"
+                        />
+                      ) : (
+                        <span className="user-icon">👤</span>
+                      )}
                       <span className="reviewer-name">
                         {review.userId?.username || "Anonymous"}
                       </span>

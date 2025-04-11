@@ -1,15 +1,15 @@
+// server/routes/userRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const auth = require('../middleware/auth');
+const { checkJwt, verifyUser } = require('../middleware/auth0');
 
-// User routes
-router.post('/register', userController.registerUser);
-router.post('/login', userController.loginUser);
-router.get('/profile', auth, userController.getUserProfile);
-router.put('/profile', auth, userController.updateUserProfile);
-router.post('/save-recipe', auth, userController.saveRecipe);
-router.delete('/unsave-recipe/:id', auth, userController.unsaveRecipe);
-router.get('/saved-recipes', auth, userController.getSavedRecipes);
+// User routes - All routes require Auth0 authentication
+router.get('/profile', checkJwt, verifyUser, userController.getUserProfile);
+router.put('/profile', checkJwt, verifyUser, userController.updateUserProfile);
+router.post('/save-recipe', checkJwt, verifyUser, userController.saveRecipe);
+router.delete('/unsave-recipe/:id', checkJwt, verifyUser, userController.unsaveRecipe);
+router.get('/saved-recipes', checkJwt, verifyUser, userController.getSavedRecipes);
 
 module.exports = router;

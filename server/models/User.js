@@ -1,8 +1,10 @@
+// server/models/User.js
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  username: {
+  auth0Id: {
     type: String,
     required: true,
     unique: true
@@ -12,7 +14,7 @@ const UserSchema = new Schema({
     required: true,
     unique: true
   },
-  password: {
+  username: {
     type: String,
     required: true
   },
@@ -23,6 +25,10 @@ const UserSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  picture: {
+    type: String,
+    default: null
   }
 });
 
