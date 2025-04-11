@@ -1,3 +1,5 @@
+// server/controllers/recipeController.js
+
 const Recipe = require("../models/Recipe");
 const path = require("path");
 
@@ -21,7 +23,17 @@ exports.getRecipeById = async (req, res) => {
       return res.status(404).json({ msg: "Recipe not found" });
     }
 
-    res.json(recipe);
+    // Check if user is authenticated to determine if the recipe is saved
+    let isSaved = false;
+    if (req.user) {
+      isSaved = req.user.savedRecipes.includes(recipe._id);
+    }
+
+    // Send recipe info with saved status
+    res.json({
+      ...recipe.toObject(),
+      isSaved
+    });
   } catch (err) {
     console.error(err.message);
 
@@ -53,7 +65,7 @@ exports.createRecipe = async (req, res) => {
       calories,
       ingredients: JSON.parse(ingredients),
       instructions,
-      userId: req.user.id,
+      userId: req.user._id,
       image: req.file ? `/uploads/recipes/${req.file.filename}` : null,
     });
 
@@ -75,7 +87,7 @@ exports.updateRecipe = async (req, res) => {
     }
 
     // Check user owns the recipe
-    if (recipe.userId.toString() !== req.user.id) {
+    if (recipe.userId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
@@ -127,7 +139,7 @@ exports.deleteRecipe = async (req, res) => {
     }
 
     // Check user owns the recipe
-    if (recipe.userId.toString() !== req.user.id) {
+    if (recipe.userId.toString() !== req.user._id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
