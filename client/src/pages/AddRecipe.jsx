@@ -1,25 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { RecipeService } from "../services/api";
+import { useAuth } from "../hooks/useAuth";
 import "./AddRecipe.css";
 
-const AddRecipe = ({ isLoggedIn, isEditing }) => {
+const AddRecipe = ({ isEditing }) => {
   const navigate = useNavigate();
   const { id } = useParams();
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/login", {
-        state: { from: isEditing ? `/recipe/edit/${id}` : "/build" },
-      });
-    }
-
-    // If editing, fetch the recipe data
-    if (isEditing && id) {
-      fetchRecipeData();
-    }
-  }, [isLoggedIn, navigate, isEditing, id]);
+  const { isAuthenticated, getToken } = useAuth();
 
   const [recipeData, setRecipeData] = useState({
     recipeName: "",
@@ -37,19 +25,18 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
   const [isLoadingRecipe, setIsLoadingRecipe] = useState(isEditing);
 
   // Fetch recipe data if editing
+  useEffect(() => {
+    if (isEditing && id && isAuthenticated) {
+      fetchRecipeData();
+    }
+  }, [isEditing, id, isAuthenticated, getToken]);
+
+  // Fetch recipe data if editing
   const fetchRecipeData = async () => {
     try {
       setIsLoadingRecipe(true);
       const response = await RecipeService.getRecipeById(id);
       const recipe = response.data;
-
-      // Check if user is the creator of the recipe
-      const userId = localStorage.getItem("userId");
-      if (recipe.userId !== userId) {
-        alert("You don't have permission to edit this recipe.");
-        navigate(`/recipe/${id}`);
-        return;
-      }
 
       // Format instructions as array for form
       const instructionsArray = recipe.instructions
@@ -226,9 +213,9 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
 
       let response;
       if (isEditing) {
-        response = await RecipeService.updateRecipe(id, formData);
+        response = await RecipeService.updateRecipe(id, formData, getToken);
       } else {
-        response = await RecipeService.createRecipe(formData);
+        response = await RecipeService.createRecipe(formData, getToken);
       }
 
       setLoading(false);
@@ -247,10 +234,6 @@ const AddRecipe = ({ isLoggedIn, isEditing }) => {
       alert("Failed to save recipe. Please try again.");
     }
   };
-
-  if (!isLoggedIn) {
-    return null; // Return null for initial render before redirect
-  }
 
   if (isLoadingRecipe) {
     return (
