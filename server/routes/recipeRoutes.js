@@ -1,7 +1,9 @@
+// server/routes/recipeRoutes.js
+
 const express = require("express");
 const router = express.Router();
 const recipeController = require("../controllers/recipeController");
-const auth = require("../middleware/auth");
+const { checkJwt, verifyUser, optionalAuth } = require('../middleware/auth0');
 const multer = require("multer");
 const path = require("path");
 
@@ -35,13 +37,15 @@ const upload = multer({
   fileFilter: fileFilter,
 });
 
-// Recipe routes
+// Public routes - no authentication required
 router.get("/", recipeController.getAllRecipes);
 router.get("/search", recipeController.searchRecipes);
 router.get("/user/:userId", recipeController.getRecipesByUser);
-router.get("/:id", recipeController.getRecipeById);
-router.post("/", auth, upload.single("image"), recipeController.createRecipe);
-router.put("/:id", auth, upload.single("image"), recipeController.updateRecipe);
-router.delete("/:id", auth, recipeController.deleteRecipe);
+router.get("/:id", optionalAuth, recipeController.getRecipeById);
+
+// Protected routes - require authentication
+router.post("/", checkJwt, verifyUser, upload.single("image"), recipeController.createRecipe);
+router.put("/:id", checkJwt, verifyUser, upload.single("image"), recipeController.updateRecipe);
+router.delete("/:id", checkJwt, verifyUser, recipeController.deleteRecipe);
 
 module.exports = router;
