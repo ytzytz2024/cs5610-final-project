@@ -65,7 +65,7 @@ exports.createRecipe = async (req, res) => {
       calories,
       ingredients: JSON.parse(ingredients),
       instructions,
-      userId: req.user._id,
+      userId: req.user.id,
       image: req.file ? `/uploads/recipes/${req.file.filename}` : null,
     });
 
@@ -87,7 +87,7 @@ exports.updateRecipe = async (req, res) => {
     }
 
     // Check user owns the recipe
-    if (recipe.userId.toString() !== req.user._id.toString()) {
+    if (recipe.userId.toString() !== req.user.id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
@@ -139,7 +139,7 @@ exports.deleteRecipe = async (req, res) => {
     }
 
     // Check user owns the recipe
-    if (recipe.userId.toString() !== req.user._id.toString()) {
+    if (recipe.userId.toString() !== req.user.id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 

@@ -17,7 +17,7 @@ exports.createReview = async (req, res) => {
 
     // Create new review
     const newReview = new Review({
-      userId: req.user._id,
+      userId: req.user.id,
       recipeId,
       comment,
     });
@@ -96,7 +96,7 @@ exports.updateReview = async (req, res) => {
     }
 
     // Check user owns the review
-    if (review.userId.toString() !== req.user._id.toString()) {
+    if (review.userId.toString() !== req.user.id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
@@ -134,7 +134,7 @@ exports.deleteReview = async (req, res) => {
     }
 
     // Check user owns the review
-    if (review.userId.toString() !== req.user._id.toString()) {
+    if (review.userId.toString() !== req.user.id.toString()) {
       return res.status(401).json({ msg: "User not authorized" });
     }
 
