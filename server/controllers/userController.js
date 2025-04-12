@@ -8,11 +8,11 @@ exports.registerOrUpdateUser = async (req, res) => {
     const { username, email } = req.body;
     const auth0Id = req.user.id; // from auth middleware
 
-    console.log("Auth0 ID from token:", auth0Id);
+    // console.log("Auth0 ID from token:", auth0Id);
     
     // Check if user already exists
     let user = await User.findOne({ auth0Id });
-    console.log("Existing user found:", user);
+    // console.log("Existing user found:", user);
     
     if (user) {
       // Update existing user
@@ -30,7 +30,7 @@ exports.registerOrUpdateUser = async (req, res) => {
     });
     
     await user.save();
-    console.log("New user created:", user);
+    // console.log("New user created:", user);
     res.json(user);
   } catch (err) {
     console.error("User registration error:", err);
@@ -90,9 +90,14 @@ exports.saveRecipe = async (req, res) => {
       return res.status(404).json({ msg: 'Recipe not found' });
     }
     
-    // Check if recipe is already saved
+    // Find user by Auth0 ID
     const user = await User.findOne({ auth0Id: req.user.id });
     
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+    
+    // Check if recipe is already saved
     if (user.savedRecipes.includes(recipeId)) {
       return res.status(400).json({ msg: 'Recipe already saved' });
     }
@@ -116,7 +121,12 @@ exports.saveRecipe = async (req, res) => {
 // Unsave a recipe
 exports.unsaveRecipe = async (req, res) => {
   try {
+    // Find user by Auth0 ID
     const user = await User.findOne({ auth0Id: req.user.id });
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
     
     // Remove recipe from saved recipes
     user.savedRecipes = user.savedRecipes.filter(
@@ -135,7 +145,12 @@ exports.unsaveRecipe = async (req, res) => {
 // Get saved recipes
 exports.getSavedRecipes = async (req, res) => {
   try {
+    // Find user by Auth0 ID
     const user = await User.findOne({ auth0Id: req.user.id });
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
     
     const savedRecipes = await Recipe.find({
       _id: { $in: user.savedRecipes }

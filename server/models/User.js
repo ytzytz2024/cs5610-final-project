@@ -27,10 +27,10 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  picture: {
-    type: String,
-    default: null
-  }
+  // picture: {
+  //   type: String,
+  //   default: null
+  // }
 });
 
 module.exports = mongoose.model('User', UserSchema);
